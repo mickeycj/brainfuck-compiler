@@ -11,7 +11,7 @@ class CompilerSpec extends FunSuite {
    *  Each sequence of tokens should contain only 8 valid BrainFuck's tokens: ">", "<", "+", "-", ".", ",", "[" and "]".
    *  Any other characters should be dropped during tokenization.
    */
-  test("Tokenization - Case 1:\n\">+<\" should be tokenized into: '>', '+' and '<'.") {
+  test("Tokenization - Case 1:\n>+<\nshould be tokenized into: '>', '+' and '<'.") {
     assert(
       Compiler.tokenize(">+<")
       ==
@@ -20,7 +20,7 @@ class CompilerSpec extends FunSuite {
       )
     )
   }
-  test("Tokenization - Case 2:\n\">,[>,]<[<]>[.>] # This acts like UNIX cat command\" should be tokenized into: '>', ',', '[', '>', ',', ']', '<', '[', '<', ']', '>', '[', '.', '>' and ']'.") {
+  test("Tokenization - Case 2:\n>,[>,]<[<]>[.>] # This acts like UNIX cat command\nshould be tokenized into: '>', ',', '[', '>', ',', ']', '<', '[', '<', ']', '>', '[', '.', '>' and ']'.") {
     assert(
       Compiler.tokenize(">,[>,]<[<]>[.>] # This acts like UNIX cat command")
       ==
@@ -40,7 +40,7 @@ class CompilerSpec extends FunSuite {
       )
     )
   }
-  test("Tokenization - Case 3:\n\"++\n> +++++\n\n[\n\t< +\n\t> -\n]\" should be tokenized into: '+', '+', '>', '+', '+', '+', '+', '+', '[', '<', '+', '>', '-' and ']'.") {
+  test("Tokenization - Case 3:\"++\n> +++++\n\n[\n\t< +\n\t> -\n]\nshould be tokenized into: '+', '+', '>', '+', '+', '+', '+', '+', '[', '<', '+', '>', '-' and ']'.") {
     assert(
       Compiler.tokenize("++\n> +++++\n\n[\n\t< +\n\t> -\n]")
       ==
@@ -54,7 +54,7 @@ class CompilerSpec extends FunSuite {
       )
     )
   }
-  test("Tokenization - Case 4:\n\"+++++++\n++++ ++++\n[\n\t< +++ +++\n\t> -\n]\n< .\" should be tokenized into: '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '[', '<', '+', '+', '+', '+', '+', '+', '>', '-', ']', '<' and '.'.") {
+  test("Tokenization - Case 4:\n+++++++\n++++ ++++\n[\n\t< +++ +++\n\t> -\n]\n< .\nshould be tokenized into: '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '[', '<', '+', '+', '+', '+', '+', '+', '>', '-', ']', '<' and '.'.") {
     assert(
       Compiler.tokenize("+++++++\n++++ ++++\n[\n\t< +++ +++\n\t> -\n]\n< .")
       ==
@@ -69,7 +69,7 @@ class CompilerSpec extends FunSuite {
       )
     )
   }
-  test("Tokenization - Case 5:\n\"+++++ +++++\n[\n\t> +++++ ++\n\t> +++++ +++++\n\t> +++\n\t> +\n\t<<<< -\n]\n> ++ .\n> + .\n+++++ ++ .\n.\n+++ .\n> ++ .\n<< +++++ +++++ +++++ .\n> .\n+++ .\n----- - .\n----- --- .\n> + .\n> .\" should be tokenized into: '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '[', '>', '+', '+', '+', '+', '+', '+', '+', '>', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '>', '+', '+', '+', '>', '+', '<', '<', '<', '<' '-', ']', '>', '+', '+', '.', '>', '+', '.', '+', '+', '+', '+', '+', '+', '+', '.', '.', '+', '+', '+', '.', '>', '+', '+', '.', '<', '<', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+' '.', '>', '.', '+', '+', '+', '.', '-', '-', '-', '-', '-', '-', '.', '-', '-', '-', '-', '-', '-', '-', '-', '.', '>', '+', '.', '>' and '.'.") {
+  test("Tokenization - Case 5:\n+++++ +++++\n[\n\t> +++++ ++\n\t> +++++ +++++\n\t> +++\n\t> +\n\t<<<< -\n]\n> ++ .\n> + .\n+++++ ++ .\n.\n+++ .\n> ++ .\n<< +++++ +++++ +++++ .\n> .\n+++ .\n----- - .\n----- --- .\n> + .\n> .\nshould be tokenized into: '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '[', '>', '+', '+', '+', '+', '+', '+', '+', '>', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '>', '+', '+', '+', '>', '+', '<', '<', '<', '<' '-', ']', '>', '+', '+', '.', '>', '+', '.', '+', '+', '+', '+', '+', '+', '+', '.', '.', '+', '+', '+', '.', '>', '+', '+', '.', '<', '<', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+' '.', '>', '.', '+', '+', '+', '.', '-', '-', '-', '-', '-', '-', '.', '-', '-', '-', '-', '-', '-', '-', '-', '.', '>', '+', '.', '>' and '.'.") {
     assert(
       Compiler.tokenize("+++++ +++++\n[\n\t> +++++ ++\n\t> +++++ +++++\n\t> +++\n\t> +\n\t<<<< -\n]\n> ++ .\n> + .\n+++++ ++ .\n.\n+++ .\n> ++ .\n<< +++++ +++++ +++++ .\n> .\n+++ .\n----- - .\n----- --- .\n> + .\n> .")
       ==
