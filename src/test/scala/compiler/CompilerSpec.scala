@@ -1,7 +1,10 @@
 package compiler
 
 import org.scalatest.FunSuite
-
+/** CompilerSpec.
+ *
+ *  Test suites for compiler functions.
+ */
 class CompilerSpec extends FunSuite {
   /** Test suite for program tokenization.
    *
