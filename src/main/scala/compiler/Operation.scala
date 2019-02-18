@@ -6,10 +6,17 @@ package compiler
 class Operation(val instruction: String, val argument: Short) {
   /** Override 'hashCode' method. */
   override def hashCode: Int = {
-    super.hashCode
+    var result = 1
+    result = 31 * result + instruction.hashCode
+    result = 31 * result + argument.hashCode
+
+    return result
   }
   /** Override 'equals' method. */
   override def equals(other: Any): Boolean = {
-    super.equals(other)
+    other match {
+      case other: Operation => other.isInstanceOf[Operation] && this.hashCode == other.hashCode
+      case _ => false
+    }
   }
 }
