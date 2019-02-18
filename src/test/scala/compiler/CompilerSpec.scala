@@ -181,7 +181,7 @@ class CompilerSpec extends FunSuite {
       3
     )
   }
-  test("Find Open Bracket - Case 4:\n>[+<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
+  test("Find Open Bracket - Case 4:\n>+]<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.findMatchingOpenBracket(
         List('>', '+', ']', '<'),
@@ -190,7 +190,7 @@ class CompilerSpec extends FunSuite {
     }
     assert(e.getMessage == "Syntax Error: no matching open bracket found!")
   }
-  test("Find Open Bracket - Case 5:\n>][+<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
+  test("Find Open Bracket - Case 5:\n>+][<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.findMatchingOpenBracket(
         List('>', '+', ']', '[', '<'),
