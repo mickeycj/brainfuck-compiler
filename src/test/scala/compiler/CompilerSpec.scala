@@ -1,12 +1,12 @@
 package compiler
-
+/** Imports */
 import org.scalatest.FunSuite
-/** CompilerSpec.
+/** CompilerSpec
  *
- *  Test suites for compiler functions.
+ *  Test suite for compiler functions.
  */
 class CompilerSpec extends FunSuite {
-  /** Test suite for program tokenization.
+  /** Tests for program tokenization.
    *
    *  Each sequence of tokens should contain only 8 valid BrainFuck's tokens: ">", "<", "+", "-", ".", ",", "[" and "]".
    *  Any other characters should be dropped during tokenization.
@@ -40,7 +40,7 @@ class CompilerSpec extends FunSuite {
       )
     )
   }
-  test("Tokenization - Case 3:\"++\n> +++++\n\n[\n\t< +\n\t> -\n]\nshould be tokenized into: '+', '+', '>', '+', '+', '+', '+', '+', '[', '<', '+', '>', '-' and ']'.") {
+  test("Tokenization - Case 3:\n++\n> +++++\n\n[\n\t< +\n\t> -\n]\nshould be tokenized into: '+', '+', '>', '+', '+', '+', '+', '+', '[', '<', '+', '>', '-' and ']'.") {
     assert(
       Compiler.tokenize("++\n> +++++\n\n[\n\t< +\n\t> -\n]")
       ==
@@ -98,7 +98,7 @@ class CompilerSpec extends FunSuite {
       )
     )
   }
-  /** Test suite for finding loop jumps.
+  /** Tests for finding loop jumps.
    *
    *  Each open/closed bracket must have a matching pair.
    *  Else, the compilation fails with syntax error.

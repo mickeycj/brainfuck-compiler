@@ -1,9 +1,9 @@
 package compiler
-
+/** Imports */
 import org.scalatest.FunSuite
-/** OperationSpec.
+/** OperationSpec
  *
- *  Test suites for Operation class.
+ *  Test suite for Operation class.
  */
 class OperationSpec extends FunSuite {
   test("Reflexive Case:\nx.equals(x) should return 'true'") {
