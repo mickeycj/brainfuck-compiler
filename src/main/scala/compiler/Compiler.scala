@@ -16,7 +16,7 @@ object Compiler extends App {
   }
   /** Find a closed bracket that matches with the current open bracket.
    *
-   *  @param operations the sequence of operations 
+   *  @param operations the sequence of operations
    *  @param openIndex the index of the current open bracket
    *  @return the index of the matching closed bracket
    */
@@ -26,8 +26,7 @@ object Compiler extends App {
   }
   /** Helper method for finding matching closed bracket.
    *
-   *  @param operations the sequence of operations 
-   *  @param openIndex the index of the current open bracket
+   *  @param operations the sequence of operations
    *  @param closedIndex the index of the possible closed bracket
    *  @param depth the current depth of the loop
    *  @return the index of the matching closed bracket
@@ -54,10 +53,38 @@ object Compiler extends App {
   }
   /** Find an open bracket that matches with the current closed bracket.
    *
-   *  @param operations the sequence of operations 
+   *  @param operations the sequence of operations
    *  @param closedIndex the index of the current closed bracket
    *  @return the index of the matching open bracket
    */
   @throws(classOf[InvalidSyntaxException])
-  def findMatchingOpenBracket(operations: Seq[Char], closedIndex: Int): Int = -1
+  def findMatchingOpenBracket(operations: Seq[Char], closedIndex: Int): Int = {
+    findMatchingOpenBracketAccumulator(operations, closedIndex - 1)
+  }
+  /** Helper method for finding matching open bracket.
+   *
+   *  @param operations the sequence of operations
+   *  @param openIndex the index of the possible open bracket
+   *  @param depth the current depth of the loop
+   *  @return the index of the matching open bracket
+   */
+  @tailrec
+  @throws(classOf[InvalidSyntaxException])
+  def findMatchingOpenBracketAccumulator(operations: Seq[Char], openIndex: Int, depth: Int = 1): Int = {
+    depth match {
+      case 0 => openIndex + 1
+      case _ => {
+        openIndex match {
+          case -1 => throw new InvalidSyntaxException("Syntax Error: no matching open bracket found!")
+          case _ => {
+            operations(openIndex) match {
+              case Instruction.OPEN_BRACKET => findMatchingOpenBracketAccumulator(operations, openIndex - 1, depth - 1)
+              case Instruction.CLOSED_BRACKET => findMatchingOpenBracketAccumulator(operations, openIndex - 1, depth + 1)
+              case _ => findMatchingOpenBracketAccumulator(operations, openIndex - 1, depth)
+            }
+          }
+        }
+      }
+    }
+  }
 }
