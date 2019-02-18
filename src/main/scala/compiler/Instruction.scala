@@ -12,14 +12,14 @@ package compiler
  */
 object Instruction {
   /** List of possible instructions. */
-  val INC_PTR             = ">"
-  val DEC_PTR             = "<"
-  val INC_VAL             = "+"
-  val DEC_VAL             = "-"
-  val PRINT               = "."
-  val READ                = ","
-  val OPEN_BRACKET        = "["
-  val CLOSED_BRACKET      = "]"
+  val INC_PTR             = '>'
+  val DEC_PTR             = '<'
+  val INC_VAL             = '+'
+  val DEC_VAL             = '-'
+  val PRINT               = '.'
+  val READ                = ','
+  val OPEN_BRACKET        = '['
+  val CLOSED_BRACKET      = ']'
   /** Regular expression for tokenization. */
   val INSTRUCTIONS_REGEX  = "[^><+\\-.,\\[\\]]"
 }

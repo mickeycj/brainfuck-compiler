@@ -3,7 +3,7 @@ package compiler
  *
  *  Each Operation instance contains the BrainFuck's instruction and the corresponding argument.
  */
-class Operation(val instruction: String, val argument: Short) {
+class Operation(val instruction: Char, val argument: Int) {
   /** Override 'hashCode' method. */
   override def hashCode: Int = {
     var result = 1
