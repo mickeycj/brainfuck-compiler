@@ -13,4 +13,20 @@ object Compiler extends App {
     val regex = "[^" + Instruction.values.toList.foldLeft("") { (acc, i) => acc + "\\" + i } + "]"
     program.replaceAll(regex, "").toArray.toList
   }
+  /** Find a closed bracket that matches with the current open bracket.
+   *
+   *  @param operations the sequence of operations 
+   *  @param openIndex the index of the current open bracket
+   *  @return the index of the matching closed bracket
+   */
+  @throws(classOf[InvalidSyntaxException])
+  def findMatchingClosedBracket(operations: Seq[Char], openIndex: Short): Short = -1
+  /** Find an open bracket that matches with the current closed bracket.
+   *
+   *  @param operations the sequence of operations 
+   *  @param closedIndex the index of the current closed bracket
+   *  @return the index of theh matching open bracket
+   */
+  @throws(classOf[InvalidSyntaxException])
+  def findMatchingOpenBracket(operations: Seq[Char], closedIndex: Short): Short = -1
 }
