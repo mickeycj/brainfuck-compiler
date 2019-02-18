@@ -25,7 +25,7 @@ object Compiler extends App {
    *
    *  @param operations the sequence of operations 
    *  @param closedIndex the index of the current closed bracket
-   *  @return the index of theh matching open bracket
+   *  @return the index of the matching open bracket
    */
   @throws(classOf[InvalidSyntaxException])
   def findMatchingOpenBracket(operations: Seq[Char], closedIndex: Short): Short = -1
