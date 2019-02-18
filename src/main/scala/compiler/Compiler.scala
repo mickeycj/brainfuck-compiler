@@ -10,8 +10,7 @@ object Compiler extends App {
    *  @return a sequence of tokens
    */
   def tokenize(program: String): Seq[Char] = {
-    val regex = "[^" + Instruction.values.toList.foldLeft("") { (acc, i) => acc + "\\" + i } + "]"
-    program.replaceAll(regex, "").toArray.toList
+    program.replaceAll(Instruction.INSTRUCTIONS_REGEX, "").toArray.toList
   }
   /** Find a closed bracket that matches with the current open bracket.
    *
