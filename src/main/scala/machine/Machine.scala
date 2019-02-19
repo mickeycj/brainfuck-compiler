@@ -54,17 +54,17 @@ class Machine(
       tapes(tapePointer) += tapeSize
     }
   }
+  /** Print to the output stream.
+   *
+   *  @param times the number of times to print
+   */
+  def print(times: Int): Unit = { }
   /** Read the input from the input stream.
    *
    *  @param times the number of times to read
    */
   @throws(classOf[IOException])
   def read(times: Int): Unit = { }
-  /** Print to the output stream.
-   *
-   *  @param times the number of times to print
-   */
-  def print(times: Int): Unit = { }
   /** Jump to the specified instruction.
    *
    *  @param position the next instruction pointer position
