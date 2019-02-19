@@ -108,5 +108,7 @@ object Compiler extends App {
    *  @return a sequence of operations
    */
   @throws(classOf[InvalidSyntaxException])
-  def compile(program: String): Seq[Operation] = List[Operation]()
+  def compile(program: String): Seq[Operation] = {
+    mapToOperations(tokenize(program))
+  }
 }
