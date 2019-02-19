@@ -70,16 +70,16 @@ class CompilerSpec extends FunSuite {
       )
     )
   }
-  test("Tokenization - Case 5:\n+++++ +++++\n[\n\t> +++++ ++\n\t> +++++ +++++\n\t> +++\n\t> +\n\t<<<< -\n]\n> ++ .\n> + .\n+++++ ++ .\n.\n+++ .\n> ++ .\n<< +++++ +++++ +++++ .\n> .\n+++ .\n----- - .\n----- --- .\n> + .\n> .\nshould return the correct sequence of tokens.") {
+  test("Tokenization - Case 5:\n+++++ +++++\n[\n\t> +++++ ++\n\t> +++++ +++++\n\t> ++++\n\t> +\n\t<<<< -\n]\n> ++ .\n> + .\n+++++ ++ .\n.\n+++ .\n> ++++ .\n----- ----- -- .\n<< +++++ +++++ +++++ .\n> .\n+++ .\n----- - .\n----- --- .\n> + .\n> .\nshould return the correct sequence of tokens.") {
     assert(
-      Compiler.tokenize("+++++ +++++\n[\n\t> +++++ ++\n\t> +++++ +++++\n\t> +++\n\t> +\n\t<<<< -\n]\n> ++ .\n> + .\n+++++ ++ .\n.\n+++ .\n> ++ .\n<< +++++ +++++ +++++ .\n> .\n+++ .\n----- - .\n----- --- .\n> + .\n> .")
+      Compiler.tokenize("+++++ +++++\n[\n\t> +++++ ++\n\t> +++++ +++++\n\t> ++++\n\t> +\n\t<<<< -\n]\n> ++ .\n> + .\n+++++ ++ .\n.\n+++ .\n> ++++ .\n----- ----- -- .\n<< +++++ +++++ +++++ .\n> .\n+++ .\n----- - .\n----- --- .\n> + .\n> .")
       ==
       Seq(
         '+', '+', '+', '+', '+', '+', '+', '+', '+', '+',
         '[',
           '>', '+', '+', '+', '+', '+', '+', '+',
           '>', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+',
-          '>', '+', '+', '+',
+          '>', '+', '+', '+', '+',
           '>', '+',
           '<', '<', '<', '<', '-',
         ']',
@@ -88,7 +88,8 @@ class CompilerSpec extends FunSuite {
         '+', '+', '+', '+', '+', '+', '+', '.',
         '.',
         '+', '+', '+', '.',
-        '>', '+', '+', '.',
+        '>', '+', '+', '+', '+', '.',
+        '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '.',
         '<', '<', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '.',
         '>', '.',
         '+', '+', '+', '.',
@@ -334,7 +335,7 @@ class CompilerSpec extends FunSuite {
       )
     )
   }
-  test("Operations Mapping - Case 5:\n'+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '[', '>', '+', '+', '+', '+', '+', '+', '+', '>', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '>', '+', '+', '+', '>', '+', '<', '<', '<', '<' '-', ']', '>', '+', '+', '.', '>', '+', '.', '+', '+', '+', '+', '+', '+', '+', '.', '.', '+', '+', '+', '.', '>', '+', '+', '.', '<', '<', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+' '.', '>', '.', '+', '+', '+', '.', '-', '-', '-', '-', '-', '-', '.', '-', '-', '-', '-', '-', '-', '-', '-', '.', '>', '+', '.', '>' and '.'\nshould return the correct sequence of operations.") {
+  test("Operations Mapping - Case 5:\n'+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '[', '>', '+', '+', '+', '+', '+', '+', '+', '>', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '>', '+', '+', '+', '+', '>', '+', '<', '<', '<', '<' '-', ']', '>', '+', '+', '.', '>', '+', '.', '+', '+', '+', '+', '+', '+', '+', '.', '.', '+', '+', '+', '.', '>', '+', '+', '+', '+', '.', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '.', '<', '<', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+' '.', '>', '.', '+', '+', '+', '.', '-', '-', '-', '-', '-', '-', '.', '-', '-', '-', '-', '-', '-', '-', '-', '.', '>', '+', '.', '>' and '.'\nshould return the correct sequence of operations.") {
     assert(
       Compiler.mapToOperations(
         Seq(
@@ -342,7 +343,7 @@ class CompilerSpec extends FunSuite {
           '[',
             '>', '+', '+', '+', '+', '+', '+', '+',
             '>', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+',
-            '>', '+', '+', '+',
+            '>', '+', '+', '+', '+',
             '>', '+',
             '<', '<', '<', '<', '-',
           ']',
@@ -351,7 +352,8 @@ class CompilerSpec extends FunSuite {
           '+', '+', '+', '+', '+', '+', '+', '.',
           '.',
           '+', '+', '+', '.',
-          '>', '+', '+', '.',
+          '>', '+', '+', '+', '+', '.',
+          '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '.',
           '<', '<', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '.',
           '>', '.',
           '+', '+', '+', '.',
@@ -361,7 +363,7 @@ class CompilerSpec extends FunSuite {
           '>', '.'
         )
       )
-      ==
+      ===
       Seq(
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
@@ -373,7 +375,7 @@ class CompilerSpec extends FunSuite {
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.OPEN_BRACKET, 41),
+        new Operation(Instruction.OPEN_BRACKET, 42),
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
@@ -394,6 +396,7 @@ class CompilerSpec extends FunSuite {
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
@@ -428,6 +431,21 @@ class CompilerSpec extends FunSuite {
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
         new Operation(Instruction.PRINT, 1),
         new Operation(Instruction.DEC_PTR, 1),
         new Operation(Instruction.DEC_PTR, 1),
@@ -605,10 +623,10 @@ class CompilerSpec extends FunSuite {
       )
     )
   }
-  test("Program Compilation - Case 5:\n+++++ +++++\n[\n\t> +++++ ++\n\t> +++++ +++++\n\t> +++\n\t> +\n\t<<<< -\n]\n> ++ .\n> + .\n+++++ ++ .\n.\n+++ .\n> ++ .\n<< +++++ +++++ +++++ .\n> .\n+++ .\n----- - .\n----- --- .\n> + .\n> .\nshould return the correct sequence of operations.") {
+  test("Program Compilation - Case 5:\n+++++ +++++\n[\n\t> +++++ ++\n\t> +++++ +++++\n\t> ++++\n\t> +\n\t<<<< -\n]\n> ++ .\n> + .\n+++++ ++ .\n.\n+++ .\n> ++++ .\n----- ----- -- .\n<< +++++ +++++ +++++ .\n> .\n+++ .\n----- - .\n----- --- .\n> + .\n> .\nshould return the correct sequence of operations.") {
     assert(
-      Compiler.compile("+++++ +++++\n[\n\t> +++++ ++\n\t> +++++ +++++\n\t> +++\n\t> +\n\t<<<< -\n]\n> ++ .\n> + .\n+++++ ++ .\n.\n+++ .\n> ++ .\n<< +++++ +++++ +++++ .\n> .\n+++ .\n----- - .\n----- --- .\n> + .\n> .")
-      ==
+      Compiler.compile("+++++ +++++\n[\n\t> +++++ ++\n\t> +++++ +++++\n\t> ++++\n\t> +\n\t<<<< -\n]\n> ++ .\n> + .\n+++++ ++ .\n.\n+++ .\n> ++++ .\n----- ----- -- .\n<< +++++ +++++ +++++ .\n> .\n+++ .\n----- - .\n----- --- .\n> + .\n> .")
+      ===
       Seq(
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
@@ -620,7 +638,7 @@ class CompilerSpec extends FunSuite {
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.OPEN_BRACKET, 41),
+        new Operation(Instruction.OPEN_BRACKET, 42),
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
@@ -641,6 +659,7 @@ class CompilerSpec extends FunSuite {
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
@@ -675,6 +694,21 @@ class CompilerSpec extends FunSuite {
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
         new Operation(Instruction.PRINT, 1),
         new Operation(Instruction.DEC_PTR, 1),
         new Operation(Instruction.DEC_PTR, 1),

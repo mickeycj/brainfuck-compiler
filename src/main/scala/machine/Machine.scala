@@ -112,10 +112,10 @@ class Machine(
           case Instruction.CLOSED_BRACKET => jumped = tapes(tapePointer) != 0
           case _ => throw new InvalidSyntaxException("Syntax Error: operation does not exists!")
         }
-        if (!jumped) {
-          instructionPointer += 1
-        } else {
+        if (jumped) {
           jump(operation.argument)
+        } else {
+          instructionPointer += 1
         }
         execute(operations)
       }

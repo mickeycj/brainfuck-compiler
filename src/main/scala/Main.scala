@@ -2,10 +2,10 @@
 import scala.io.Source
 import compiler.{Compiler, InvalidSyntaxException}
 import machine.Machine
-/** Run an example Brainfuck program => helloworld.bf */
+/** Run an example Brainfuck program => hello.bf */
 object Main extends App {
   println()
-  val fileName = "helloworld.bf"
+  val fileName = "hello.bf"
   val bufferedSource = Source.fromResource(fileName)
   val program = bufferedSource.getLines.mkString
   val machine = new Machine(System.in, System.out)

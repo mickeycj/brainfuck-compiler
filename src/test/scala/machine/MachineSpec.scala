@@ -175,7 +175,7 @@ class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
     verify(in).read
     verifyNoMoreInteractions(in)
   }
-  test("Execute 'HelloWorld' Program:\nShould print 'Hello World!' to OutputStream.") {
+  test("Execute 'Hello, World!' Program:\nShould print 'Hello, World!' to OutputStream.") {
     machine.execute(
       Seq(
         new Operation(Instruction.INC_VAL, 1),
@@ -188,7 +188,7 @@ class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.OPEN_BRACKET, 41),
+        new Operation(Instruction.OPEN_BRACKET, 42),
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
@@ -209,6 +209,7 @@ class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
@@ -243,6 +244,21 @@ class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
         new Operation(Instruction.PRINT, 1),
         new Operation(Instruction.DEC_PTR, 1),
         new Operation(Instruction.DEC_PTR, 1),
@@ -296,6 +312,7 @@ class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
     printInOrder.verify(out, times(1)).print('e')
     printInOrder.verify(out, times(2)).print('l')
     printInOrder.verify(out, times(1)).print('o')
+    printInOrder.verify(out, times(1)).print(',')
     printInOrder.verify(out, times(1)).print(' ')
     printInOrder.verify(out, times(1)).print('W')
     printInOrder.verify(out, times(1)).print('o')
