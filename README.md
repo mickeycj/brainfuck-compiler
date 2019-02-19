@@ -1,1 +1,1 @@
-# BrainFuck Compiler
+# Brainfuck Compiler

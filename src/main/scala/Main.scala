@@ -2,7 +2,7 @@
 import scala.io.Source
 import compiler.{Compiler, InvalidSyntaxException}
 import machine.Machine
-/** Run an example BrainFuck program => helloworld.bf */
+/** Run an example Brainfuck program => helloworld.bf */
 object Main extends App {
   val fileName = "helloworld.bf"
   val bufferedSource = Source.fromResource(fileName)

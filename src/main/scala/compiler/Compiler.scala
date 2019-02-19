@@ -2,12 +2,12 @@ package compiler
 /** Imports */
 import scala.annotation.tailrec
 import machine.Operation
-/** Object for compiling BrainFuck's codes.
+/** Object for compiling Brainfuck's codes.
  *
- *  This object contains functions that deal with tokenizing and compiling BrainFuck's codes into machine-readable operations.
+ *  This object contains functions that deal with tokenizing and compiling Brainfuck's codes into machine-readable operations.
  */
 object Compiler {
-  /** Tokenize the input program into valid BrainFuck's tokens.
+  /** Tokenize the input program into valid Brainfuck's tokens.
    *
    *  @param program the string of the program to be tokenized
    *  @return a sequence of tokens
@@ -103,7 +103,7 @@ object Compiler {
       }
     }
   }
-  /** Compile the input program into BrainFuck's operations.
+  /** Compile the input program into Brainfuck's operations.
    *
    *  @param program the string of the program to be compiled
    *  @return a sequence of operations

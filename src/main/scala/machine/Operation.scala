@@ -1,7 +1,7 @@
 package machine
 /** Operations for the machine to execute.
  *
- *  Each Operation instance contains the BrainFuck's instruction and the corresponding argument.
+ *  Each Operation instance contains the Brainfuck's instruction and the corresponding argument.
  */
 class Operation(val instruction: Char, val argument: Int) {
   /** Override 'hashCode' method. */

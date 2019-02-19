@@ -9,7 +9,7 @@ import machine.Operation
 class CompilerSpec extends FunSuite {
   /** Tests for program tokenization.
    *
-   *  Each sequence of tokens should contain only 8 valid BrainFuck's tokens: ">", "<", "+", "-", ".", ",", "[" and "]".
+   *  Each sequence of tokens should contain only 8 valid Brainfuck's tokens: ">", "<", "+", "-", ".", ",", "[" and "]".
    *  Any other characters should be dropped during tokenization.
    */
   test("Tokenization - Case 1:\n>+<\nshould return the correct sequence of tokens.") {

@@ -1,5 +1,5 @@
 package compiler
-/** BrainFuck's set of instructions.
+/** Brainfuck's set of instructions.
  *
  *  ">" : Increment the pointer
  *  "<" : Decrement the pointer

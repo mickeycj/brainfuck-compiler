@@ -3,9 +3,9 @@ package machine
 import java.io.{IOException, InputStream, PrintStream}
 import scala.annotation.tailrec
 import compiler.{Instruction, InvalidSyntaxException}
-/** Class for running BrainFuck's compiled codes.
+/** Class for running Brainfuck's compiled codes.
  *
- *  This class deals with reading BrainFuck's files and executing compiled codes.
+ *  This class deals with reading Brainfuck's files and executing compiled codes.
  */
 class Machine(
   val in: InputStream,

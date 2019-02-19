@@ -20,9 +20,9 @@ class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
     reset(out)
     machine = new Machine(in, out, Array.fill[Int](10){0})
   }
-  /** Tests for all BrainFuck's operations.
+  /** Tests for all Brainfuck's operations.
    *
-   *  Each function must perform according to BrainFuck's specifications.
+   *  Each function must perform according to Brainfuck's specifications.
    */
   test("Increment Pointer - Case 1:\nTape pointer at 0 should move to 1 after one function call.") {
     machine.incrementPointer(1)
@@ -73,9 +73,9 @@ class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
     verify(in).read
     verifyNoMoreInteractions(in)
   }
-  /** Tests for BrainFuck's code execution.
+  /** Tests for Brainfuck's code execution.
    *
-   *  Each sequence of operations must perform correctly according to BrainFuck's specifications.
+   *  Each sequence of operations must perform correctly according to Brainfuck's specifications.
    */
   test("Tapes Clearing:\nTapes must be cleared when 'clear' method is called (including pointers).") {
     machine.tapes = Array.fill[Int](10){1}
