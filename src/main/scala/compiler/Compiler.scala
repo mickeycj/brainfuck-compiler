@@ -93,5 +93,13 @@ object Compiler extends App {
    *  @return a sequence of operations
    */
   @throws(classOf[InvalidSyntaxException])
-  def mapToOperations(tokens: Seq[Char]): Seq[Operation] = List[Operation]()
+  def mapToOperations(tokens: Seq[Char]): Seq[Operation] = {
+    tokens.zipWithIndex.map { case (token, index) =>
+      token match {
+        case Instruction.OPEN_BRACKET => new Operation(token, findMatchingClosedBracket(tokens, index))
+        case Instruction.CLOSED_BRACKET => new Operation(token, findMatchingOpenBracket(tokens, index))
+        case _ => new Operation(token, 1)
+      }
+    }
+  }
 }
