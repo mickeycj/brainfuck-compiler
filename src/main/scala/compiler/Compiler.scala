@@ -87,4 +87,11 @@ object Compiler extends App {
       }
     }
   }
+  /** Map each token to an appropriate operation.
+   *
+   *  @param tokens a sequence of tokens to be converted
+   *  @return a sequence of operations
+   */
+  @throws(classOf[InvalidSyntaxException])
+  def mapToOperations(tokens: Seq[Char]): Seq[Operation] = List[Operation]()
 }

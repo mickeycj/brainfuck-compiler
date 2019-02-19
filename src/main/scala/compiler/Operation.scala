@@ -9,8 +9,7 @@ class Operation(val instruction: Char, val argument: Int) {
     var result = 1
     result = 31 * result + instruction.hashCode
     result = 31 * result + argument.hashCode
-
-    return result
+    result
   }
   /** Override 'equals' method. */
   override def equals(other: Any): Boolean = {
@@ -18,5 +17,9 @@ class Operation(val instruction: Char, val argument: Int) {
       case other: Operation => other.isInstanceOf[Operation] && this.hashCode == other.hashCode
       case _ => false
     }
+  }
+  /** Override 'toString' method. */
+  override def toString: String = {
+    s"Operation: { instruction: $instruction, argument: $argument }"
   }
 }
