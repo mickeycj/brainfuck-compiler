@@ -16,35 +16,35 @@ object Compiler extends App {
   }
   /** Find a closed bracket that matches with the current open bracket.
    *
-   *  @param operations the sequence of operations
+   *  @param tokens the sequence of tokens
    *  @param openIndex the index of the current open bracket
    *  @return the index of the matching closed bracket
    */
   @throws(classOf[InvalidSyntaxException])
-  def findMatchingClosedBracket(operations: Seq[Char], openIndex: Int): Int = {
-    findMatchingClosedBracketAccumulator(operations, openIndex + 1)
+  def findMatchingClosedBracket(tokens: Seq[Char], openIndex: Int): Int = {
+    findMatchingClosedBracketAccumulator(tokens, openIndex + 1)
   }
   /** Helper method for finding matching closed bracket.
    *
-   *  @param operations the sequence of operations
+   *  @param tokens the sequence of tokens
    *  @param closedIndex the index of the possible closed bracket
    *  @param depth the current depth of the loop
    *  @return the index of the matching closed bracket
    */
   @tailrec
   @throws(classOf[InvalidSyntaxException])
-  def findMatchingClosedBracketAccumulator(operations: Seq[Char], closedIndex: Int, depth: Int = 1): Int = {
+  def findMatchingClosedBracketAccumulator(tokens: Seq[Char], closedIndex: Int, depth: Int = 1): Int = {
     depth match {
       case 0 => closedIndex - 1
       case _ => {
-        val Length = operations.length
+        val Length = tokens.length
         closedIndex match {
           case Length => throw new InvalidSyntaxException("Syntax Error: no matching closed bracket found!")
           case _ => {
-            operations(closedIndex) match {
-              case Instruction.OPEN_BRACKET => findMatchingClosedBracketAccumulator(operations, closedIndex + 1, depth + 1)
-              case Instruction.CLOSED_BRACKET => findMatchingClosedBracketAccumulator(operations, closedIndex + 1, depth - 1)
-              case _ => findMatchingClosedBracketAccumulator(operations, closedIndex + 1, depth)
+            tokens(closedIndex) match {
+              case Instruction.OPEN_BRACKET => findMatchingClosedBracketAccumulator(tokens, closedIndex + 1, depth + 1)
+              case Instruction.CLOSED_BRACKET => findMatchingClosedBracketAccumulator(tokens, closedIndex + 1, depth - 1)
+              case _ => findMatchingClosedBracketAccumulator(tokens, closedIndex + 1, depth)
             }
           }
         }
@@ -53,34 +53,34 @@ object Compiler extends App {
   }
   /** Find an open bracket that matches with the current closed bracket.
    *
-   *  @param operations the sequence of operations
+   *  @param tokens the sequence of tokens
    *  @param closedIndex the index of the current closed bracket
    *  @return the index of the matching open bracket
    */
   @throws(classOf[InvalidSyntaxException])
-  def findMatchingOpenBracket(operations: Seq[Char], closedIndex: Int): Int = {
-    findMatchingOpenBracketAccumulator(operations, closedIndex - 1)
+  def findMatchingOpenBracket(tokens: Seq[Char], closedIndex: Int): Int = {
+    findMatchingOpenBracketAccumulator(tokens, closedIndex - 1)
   }
   /** Helper method for finding matching open bracket.
    *
-   *  @param operations the sequence of operations
+   *  @param tokens the sequence of tokens
    *  @param openIndex the index of the possible open bracket
    *  @param depth the current depth of the loop
    *  @return the index of the matching open bracket
    */
   @tailrec
   @throws(classOf[InvalidSyntaxException])
-  def findMatchingOpenBracketAccumulator(operations: Seq[Char], openIndex: Int, depth: Int = 1): Int = {
+  def findMatchingOpenBracketAccumulator(tokens: Seq[Char], openIndex: Int, depth: Int = 1): Int = {
     depth match {
       case 0 => openIndex + 1
       case _ => {
         openIndex match {
           case -1 => throw new InvalidSyntaxException("Syntax Error: no matching open bracket found!")
           case _ => {
-            operations(openIndex) match {
-              case Instruction.OPEN_BRACKET => findMatchingOpenBracketAccumulator(operations, openIndex - 1, depth - 1)
-              case Instruction.CLOSED_BRACKET => findMatchingOpenBracketAccumulator(operations, openIndex - 1, depth + 1)
-              case _ => findMatchingOpenBracketAccumulator(operations, openIndex - 1, depth)
+            tokens(openIndex) match {
+              case Instruction.OPEN_BRACKET => findMatchingOpenBracketAccumulator(tokens, openIndex - 1, depth - 1)
+              case Instruction.CLOSED_BRACKET => findMatchingOpenBracketAccumulator(tokens, openIndex - 1, depth + 1)
+              case _ => findMatchingOpenBracketAccumulator(tokens, openIndex - 1, depth)
             }
           }
         }
