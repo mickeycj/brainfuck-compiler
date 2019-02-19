@@ -10,6 +10,7 @@ class Machine(
   val in: InputStream,
   val out: PrintStream,
   var tapes: Array[Int] = Array.fill[Int](Short.MaxValue){0},
+  val tapeSize: Int = 128,
   var tapePointer: Int = 0,
   var instructionPointer: Int = 0
 ) {
@@ -17,12 +18,22 @@ class Machine(
    *
    *  @param positions the number of positions to move
    */
-  def incrementPointer(positions: Int): Unit = { }
+  def incrementPointer(positions: Int): Unit = {
+    tapePointer += positions
+    if (tapePointer >= tapeSize) {
+      tapePointer %= tapeSize
+    }
+  }
   /** Decrement the pointer's position.
    *
    *  @param positions the number of positions to move
    */
-  def decrementPointer(positions: Int): Unit = { }
+  def decrementPointer(positions: Int): Unit = {
+    tapePointer -= positions
+    if (tapePointer < 0) {
+      tapePointer += tapeSize
+    }
+  }
   /** Increment the value at the current tape position.
    *
    *  @param value the value to increment
