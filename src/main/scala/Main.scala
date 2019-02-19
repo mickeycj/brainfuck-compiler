@@ -10,8 +10,7 @@ object Main extends App {
   val program = bufferedSource.getLines.mkString
   val machine = new Machine(System.in, System.out)
   try {
-    val operations = Compiler.compile(program)
-    machine.execute(operations)
+    machine.execute(Compiler.compile(program))
   } catch {
     case e: InvalidSyntaxException => println(e.getMessage)
     case _: Throwable => println("Unknown Exception!")
