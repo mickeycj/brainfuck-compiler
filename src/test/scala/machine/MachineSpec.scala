@@ -18,11 +18,26 @@ class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
   before {
     machine = new Machine(in, out, tapes)
   }
-  /** Test if Mockito works.
+  /** Tests for all BrainFuck's operations.
    *
-   *  This test simply tests whether the Machine instance is instantiated at all.
+   *  Each function must perform according to BrainFuck's specifications.
    */
-  test("Test") {
-    assert(machine.tapes.length == machine.tapes.length)
+  test("Increment Pointer - Case 1:\nTape pointer at 0 should move to 1 after one function call.") {
+    machine.incrementPointer(1)
+    assert(machine.tapePointer == 1)
+  }
+  test("Increment Pointer - Case 2:\nTape pointer at 127 should move to 0 after one function call.") {
+    machine.tapePointer = 127
+    machine.incrementPointer(1)
+    assert(machine.tapePointer == 0)
+  }
+  test("Decrement Pointer - Case 1:\nTape pointer at 0 should move to 127 after one function call.") {
+    machine.decrementPointer(1)
+    assert(machine.tapePointer == 127)
+  }
+  test("Decrement Pointer - Case 2:\nTape pointer at 127 should move to 126 after one function call.") {
+    machine.tapePointer = 127
+    machine.decrementPointer(1)
+    assert(machine.tapePointer == 126)
   }
 }
