@@ -58,13 +58,25 @@ class Machine(
    *
    *  @param times the number of times to print
    */
-  def print(times: Int): Unit = { }
+  def print(times: Int): Unit = {
+    out.print(tapes(tapePointer).toChar)
+    times match {
+      case 1 => 
+      case _ => print(times - 1)
+    }
+  }
   /** Read the input from the input stream.
    *
    *  @param times the number of times to read
    */
   @throws(classOf[IOException])
-  def read(times: Int): Unit = { }
+  def read(times: Int): Unit = {
+    tapes(tapePointer) = in.read()
+    times match {
+      case 1 =>
+      case _ => read(times - 1)
+    }
+  }
   /** Jump to the specified instruction.
    *
    *  @param position the next instruction pointer position

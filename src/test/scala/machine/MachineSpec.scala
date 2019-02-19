@@ -64,9 +64,7 @@ class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
     verifyNoMoreInteractions(out)
   }
   test("Read from InputStream:\nShould read 72 ('H') from InputStream and write to the current tape.") {
-    when(in.read())
-      .thenReturn(71)
-      .thenReturn(72)
+    when(in.read()).thenReturn(72)
     machine.read(1)
     assert(machine.tapes(machine.tapePointer) == 72)
     verify(in, times(1)).read()
