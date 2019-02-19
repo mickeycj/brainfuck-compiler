@@ -26,18 +26,18 @@ class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
     machine.incrementPointer(1)
     assert(machine.tapePointer == 1)
   }
-  test("Increment Pointer - Case 2:\nTape pointer at 127 should move to 0 after one function call.") {
-    machine.tapePointer = 127
+  test("Increment Pointer - Case 2:\nTape pointer at the last tape should move to 0 after one function call.") {
+    machine.tapePointer = machine.tapes.length - 1
     machine.incrementPointer(1)
     assert(machine.tapePointer == 0)
   }
-  test("Decrement Pointer - Case 1:\nTape pointer at 0 should move to 127 after one function call.") {
+  test("Decrement Pointer - Case 1:\nTape pointer at 0 should move to the last tape after one function call.") {
     machine.decrementPointer(1)
-    assert(machine.tapePointer == 127)
+    assert(machine.tapePointer == machine.tapes.length - 1)
   }
-  test("Decrement Pointer - Case 2:\nTape pointer at 127 should move to 126 after one function call.") {
-    machine.tapePointer = 127
+  test("Decrement Pointer - Case 2:\nTape pointer at 1 should move to 0 after one function call.") {
+    machine.tapePointer = 1
     machine.decrementPointer(1)
-    assert(machine.tapePointer == 126)
+    assert(machine.tapePointer == 0)
   }
 }

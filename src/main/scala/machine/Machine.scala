@@ -20,8 +20,8 @@ class Machine(
    */
   def incrementPointer(positions: Int): Unit = {
     tapePointer += positions
-    if (tapePointer >= tapeSize) {
-      tapePointer %= tapeSize
+    if (tapePointer >= tapes.length) {
+      tapePointer %= tapes.length
     }
   }
   /** Decrement the pointer's position.
@@ -31,7 +31,7 @@ class Machine(
   def decrementPointer(positions: Int): Unit = {
     tapePointer -= positions
     if (tapePointer < 0) {
-      tapePointer += tapeSize
+      tapePointer += tapes.length
     }
   }
   /** Increment the value at the current tape position.
