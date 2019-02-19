@@ -1,6 +1,7 @@
 package compiler
 /** Imports */
 import scala.annotation.tailrec
+import machine.Operation
 /** Object for compiling BrainFuck's codes.
  *
  *  This object contains functions that deal with tokenizing and compiling BrainFuck's codes into machine-readable operations.

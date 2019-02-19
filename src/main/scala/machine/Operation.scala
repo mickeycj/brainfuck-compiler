@@ -1,4 +1,4 @@
-package compiler
+package machine
 /** Operations for the machine to execute.
  *
  *  Each Operation instance contains the BrainFuck's instruction and the corresponding argument.

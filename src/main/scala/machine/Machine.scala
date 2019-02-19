@@ -2,7 +2,7 @@ package machine
 /** Imports */
 import java.io.{IOException, InputStream, PrintStream}
 import scala.annotation.tailrec
-import compiler.{Instruction, InvalidSyntaxException, Operation}
+import compiler.{Instruction, InvalidSyntaxException}
 /** Class for running BrainFuck's compiled codes.
  *
  *  This class deals with reading BrainFuck's files and executing compiled codes.

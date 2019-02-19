@@ -5,7 +5,7 @@ import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
 import org.scalatest.FunSuite
 import org.scalatest.mockito.MockitoSugar
-import compiler.{Instruction, Operation}
+import compiler.Instruction
 /** MachineSpec
  *
  *  Test suite for Machine class.

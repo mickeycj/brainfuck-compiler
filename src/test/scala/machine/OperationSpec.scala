@@ -1,6 +1,7 @@
-package compiler
+package machine
 /** Imports */
 import org.scalatest.FunSuite
+import compiler.Instruction
 /** OperationSpec
  *
  *  Test suite for Operation class.

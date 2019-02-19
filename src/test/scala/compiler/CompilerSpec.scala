@@ -1,6 +1,7 @@
 package compiler
 /** Imports */
 import org.scalatest.FunSuite
+import machine.Operation
 /** CompilerSpec
  *
  *  Test suite for compiler functions.
