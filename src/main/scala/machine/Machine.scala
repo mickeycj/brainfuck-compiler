@@ -38,12 +38,22 @@ class Machine(
    *
    *  @param value the value to increment
    */
-  def incrementValue(value: Int): Unit = { }
+  def incrementValue(value: Int): Unit = {
+    tapes(tapePointer) += value
+    if (tapes(tapePointer) >= tapeSize) {
+      tapes(tapePointer) %= tapeSize
+    }
+  }
   /** Decrement the value at the current tape position.
    *
    *  @param value the value to decrement
    */
-  def decrementValue(value: Int): Unit = { }
+  def decrementValue(value: Int): Unit = {
+    tapes(tapePointer) -= value
+    if (tapes(tapePointer) < 0) {
+      tapes(tapePointer) += tapeSize
+    }
+  }
   /** Read the input from the input stream.
    *
    *  @param times the number of times to read
