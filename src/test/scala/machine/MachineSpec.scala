@@ -1,10 +1,11 @@
 package machine
 /** Imports */
+import org.scalatest.BeforeAndAfter
 import org.scalatest.FunSuite
 /** MachineSpec
  *
- *  Test suite for mechine functions.
+ *  Test suite for Machine class.
  */
-class MachineSpec extends FunSuite {
+class MachineSpec extends FunSuite with BeforeAndAfter {
   
 }

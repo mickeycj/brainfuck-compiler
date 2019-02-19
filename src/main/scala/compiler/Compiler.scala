@@ -5,7 +5,7 @@ import scala.annotation.tailrec
  *
  *  This object contains functions that deal with tokenizing and compiling BrainFuck's codes into machine-readable operations.
  */
-object Compiler extends App {
+object Compiler {
   /** Tokenize the input program into valid BrainFuck's tokens.
    *
    *  @param program the string of the program to be tokenized
