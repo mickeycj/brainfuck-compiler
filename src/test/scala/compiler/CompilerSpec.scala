@@ -103,7 +103,7 @@ class CompilerSpec extends FunSuite {
    *  Each open/closed bracket must have a matching pair.
    *  Else, the compilation fails with syntax error.
    */
-  test("Find Closed Bracket - Case 1:\n>[+]<\nshould return the index of 3") {
+  test("Find Closed Bracket - Case 1:\n'>', '[', '+', ']' and '<'\nshould return the index of 3") {
     assert(
       Compiler.findMatchingClosedBracket(
         Seq('>', '[', '+', ']', '<'),
@@ -113,7 +113,7 @@ class CompilerSpec extends FunSuite {
       3
     )
   }
-  test("Find Closed Bracket - Case 2:\n>[+[--]>+]<\nshould return the index of 9 for the first open bracket") {
+  test("Find Closed Bracket - Case 2:\n'>', '[', '+', '[', '-', '-', ']', '>', '+', ']' and '<'\nshould return the index of 9 for the first open bracket") {
     assert(
       Compiler.findMatchingClosedBracket(
         Seq('>', '[', '+', '[', '-', '-', ']', '>', '+', ']', '<'),
@@ -123,7 +123,7 @@ class CompilerSpec extends FunSuite {
       9
     )
   }
-  test("Find Closed Bracket - Case 3:\n>[+[--]>+]<\nshould return the index of 6 for the second open bracket") {
+  test("Find Closed Bracket - Case 3:\n'>', '[', '+', '[', '-', '-', ']', '>', '+', ']' and '<'\nshould return the index of 6 for the second open bracket") {
     assert(
       Compiler.findMatchingClosedBracket(
         Seq('>', '[', '+', '[', '-', '-', ']', '>', '+', ']', '<'),
@@ -133,7 +133,7 @@ class CompilerSpec extends FunSuite {
       6
     )
   }
-  test("Find Closed Bracket - Case 4:\n>[+<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching closed bracket found!\"") {
+  test("Find Closed Bracket - Case 4:\n'>', '[', '+' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching closed bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.findMatchingClosedBracket(
         Seq('>', '[', '+', '<'),
@@ -142,7 +142,7 @@ class CompilerSpec extends FunSuite {
     }
     assert(e.getMessage == "Syntax Error: no matching closed bracket found!")
   }
-  test("Find Closed Bracket - Case 5:\n>][+<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching closed bracket found!\"") {
+  test("Find Closed Bracket - Case 5:\n'>', ']', '[', '+' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching closed bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.findMatchingClosedBracket(
         Seq('>', ']', '[', '+', '<'),
@@ -151,7 +151,7 @@ class CompilerSpec extends FunSuite {
     }
     assert(e.getMessage == "Syntax Error: no matching closed bracket found!")
   }
-  test("Find Open Bracket - Case 1:\n>[+]<\nshould return the index of 1") {
+  test("Find Open Bracket - Case 1:\n'>', '[', '+', ']' and '<'\nshould return the index of 1") {
     assert(
       Compiler.findMatchingOpenBracket(
         Seq('>', '[', '+', ']', '<'),
@@ -161,7 +161,7 @@ class CompilerSpec extends FunSuite {
       1
     )
   }
-  test("Find Open Bracket - Case 2:\n>[+[--]>+]<\nshould return the index of 1 for the last closed bracket") {
+  test("Find Open Bracket - Case 2:\n'>', '[', '+', '[', '-', '-', ']', '>', '+', ']' and '<'\nshould return the index of 1 for the last closed bracket") {
     assert(
       Compiler.findMatchingOpenBracket(
         Seq('>', '[', '+', '[', '-', '-', ']', '>', '+', ']', '<'),
@@ -171,7 +171,7 @@ class CompilerSpec extends FunSuite {
       1
     )
   }
-  test("Find Open Bracket - Case 3:\n>[+[--]>+]<\nshould return the index of 3 for the second-to-last closed bracket") {
+  test("Find Open Bracket - Case 3:\n'>', '[', '+', '[', '-', '-', ']', '>', '+', ']' and '<'\nshould return the index of 3 for the second-to-last closed bracket") {
     assert(
       Compiler.findMatchingOpenBracket(
         Seq('>', '[', '+', '[', '-', '-', ']', '>', '+', ']', '<'),
@@ -181,7 +181,7 @@ class CompilerSpec extends FunSuite {
       3
     )
   }
-  test("Find Open Bracket - Case 4:\n>+]<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
+  test("Find Open Bracket - Case 4:\n'>', '+', ']' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.findMatchingOpenBracket(
         Seq('>', '+', ']', '<'),
@@ -190,7 +190,7 @@ class CompilerSpec extends FunSuite {
     }
     assert(e.getMessage == "Syntax Error: no matching open bracket found!")
   }
-  test("Find Open Bracket - Case 5:\n>+][<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
+  test("Find Open Bracket - Case 5:\n'>', '+', ']', '[' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.findMatchingOpenBracket(
         Seq('>', '+', ']', '[', '<'),
@@ -476,7 +476,7 @@ class CompilerSpec extends FunSuite {
       )
     )
   }
-  test("Operations Mapping - Case 6:\n>[+<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching closed bracket found!\"") {
+  test("Operations Mapping - Case 6:\n'>', '[', '+' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching closed bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.mapToOperations(
         Seq('>', '[', '+', '<')
@@ -484,7 +484,7 @@ class CompilerSpec extends FunSuite {
     }
     assert(e.getMessage == "Syntax Error: no matching closed bracket found!")
   }
-  test("Operations Mapping - Case 7:\n>][+<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
+  test("Operations Mapping - Case 7:\n'>', ']', '[', '+' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.mapToOperations(
         Seq('>', ']', '[', '+', '<')
@@ -492,7 +492,7 @@ class CompilerSpec extends FunSuite {
     }
     assert(e.getMessage == "Syntax Error: no matching open bracket found!")
   }
-  test("Operations Mapping - Case 8:\n>+]<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
+  test("Operations Mapping - Case 8:\n'>', '+', ']' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.mapToOperations(
         Seq('>', '+', ']', '<')
@@ -500,11 +500,250 @@ class CompilerSpec extends FunSuite {
     }
     assert(e.getMessage == "Syntax Error: no matching open bracket found!")
   }
-  test("Operations Mapping - Case 9:\n>+][<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
+  test("Operations Mapping - Case 9:\n'>', '+', ']', '[' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.mapToOperations(
         Seq('>', '+', ']', '[', '<')
       )
+    }
+    assert(e.getMessage == "Syntax Error: no matching open bracket found!")
+  }
+  /** Tests for program compilation.
+   *
+   *  Each input program should produce an appropriate sequence of operations.
+   */
+  test("Program Compilation - Case 1:\n>+<\nshould return the correct sequence of operations.") {
+    assert(
+      Compiler.compile(">+<")
+      ==
+      Seq(
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.DEC_PTR, 1)
+      )
+    )
+  }
+  test("Program Compilation - Case 2:\n>,[>,]<[<]>[.>] # This acts like UNIX cat command\nshould return the correct sequence of operations.") {
+    assert(
+      Compiler.compile(">,[>,]<[<]>[.>] # This acts like UNIX cat command")
+      ==
+      Seq(
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.READ, 1),
+        new Operation(Instruction.OPEN_BRACKET, 5),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.READ, 1),
+        new Operation(Instruction.CLOSED_BRACKET, 2),
+        new Operation(Instruction.DEC_PTR, 1),
+        new Operation(Instruction.OPEN_BRACKET, 9),
+        new Operation(Instruction.DEC_PTR, 1),
+        new Operation(Instruction.CLOSED_BRACKET, 7),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.OPEN_BRACKET, 14),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.CLOSED_BRACKET, 11)
+      )
+    )
+  }
+  test("Program Compilation - Case 3:\n++\n> +++++\n\n[\n\t< +\n\t> -\n]\nshould return the correct sequence of operations.") {
+    assert(
+      Compiler.compile("++\n> +++++\n\n[\n\t< +\n\t> -\n]")
+      ==
+      Seq(
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.OPEN_BRACKET, 13),
+        new Operation(Instruction.DEC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.CLOSED_BRACKET, 8)
+      )
+    )
+  }
+  test("Program Compilation - Case 4:\n+++++++\n++++ ++++\n[\n\t< +++ +++\n\t> -\n]\n< .\nshould return the correct sequence of operations.") {
+    assert(
+      Compiler.compile("+++++++\n++++ ++++\n[\n\t< +++ +++\n\t> -\n]\n< .")
+      ==
+      Seq(
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.OPEN_BRACKET, 25),
+        new Operation(Instruction.DEC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.CLOSED_BRACKET, 15),
+        new Operation(Instruction.DEC_PTR, 1),
+        new Operation(Instruction.PRINT, 1)
+      )
+    )
+  }
+  test("Program Compilation - Case 5:\n+++++ +++++\n[\n\t> +++++ ++\n\t> +++++ +++++\n\t> +++\n\t> +\n\t<<<< -\n]\n> ++ .\n> + .\n+++++ ++ .\n.\n+++ .\n> ++ .\n<< +++++ +++++ +++++ .\n> .\n+++ .\n----- - .\n----- --- .\n> + .\n> .\nshould return the correct sequence of operations.") {
+    assert(
+      Compiler.compile("+++++ +++++\n[\n\t> +++++ ++\n\t> +++++ +++++\n\t> +++\n\t> +\n\t<<<< -\n]\n> ++ .\n> + .\n+++++ ++ .\n.\n+++ .\n> ++ .\n<< +++++ +++++ +++++ .\n> .\n+++ .\n----- - .\n----- --- .\n> + .\n> .")
+      ==
+      Seq(
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.OPEN_BRACKET, 41),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.DEC_PTR, 1),
+        new Operation(Instruction.DEC_PTR, 1),
+        new Operation(Instruction.DEC_PTR, 1),
+        new Operation(Instruction.DEC_PTR, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.CLOSED_BRACKET, 10),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.DEC_PTR, 1),
+        new Operation(Instruction.DEC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.PRINT, 1)
+      )
+    )
+  }
+  test("Program Compilation - Case 6:\n>[+<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching closed bracket found!\"") {
+    val e = intercept[InvalidSyntaxException] {
+      Compiler.compile(">[+<")
+    }
+    assert(e.getMessage == "Syntax Error: no matching closed bracket found!")
+  }
+  test("Program Compilation - Case 7:\n>][+<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
+    val e = intercept[InvalidSyntaxException] {
+      Compiler.compile(">][+<")
+    }
+    assert(e.getMessage == "Syntax Error: no matching open bracket found!")
+  }
+  test("Program Compilation - Case 8:\n>+]<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
+    val e = intercept[InvalidSyntaxException] {
+      Compiler.compile(">+]<")
+    }
+    assert(e.getMessage == "Syntax Error: no matching open bracket found!")
+  }
+  test("Program Compilation - Case 9:\n>+][<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
+    val e = intercept[InvalidSyntaxException] {
+      Compiler.compile(">+][<")
     }
     assert(e.getMessage == "Syntax Error: no matching open bracket found!")
   }

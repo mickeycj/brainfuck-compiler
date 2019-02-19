@@ -102,4 +102,11 @@ object Compiler extends App {
       }
     }
   }
+  /** Compile the input program into BrainFuck's operations.
+   *
+   *  @param program the string of the program to be compiled
+   *  @return a sequence of operations
+   */
+  @throws(classOf[InvalidSyntaxException])
+  def compile(program: String): Seq[Operation] = List[Operation]()
 }
