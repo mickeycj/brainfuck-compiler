@@ -106,7 +106,7 @@ class CompilerSpec extends FunSuite {
   test("Find Closed Bracket - Case 1:\n>[+]<\nshould return the index of 3") {
     assert(
       Compiler.findMatchingClosedBracket(
-        List('>', '[', '+', ']', '<'),
+        Seq('>', '[', '+', ']', '<'),
         1
       )
       ==
@@ -116,7 +116,7 @@ class CompilerSpec extends FunSuite {
   test("Find Closed Bracket - Case 2:\n>[+[--]>+]<\nshould return the index of 9 for the first open bracket") {
     assert(
       Compiler.findMatchingClosedBracket(
-        List('>', '[', '+', '[', '-', '-', ']', '>', '+', ']', '<'),
+        Seq('>', '[', '+', '[', '-', '-', ']', '>', '+', ']', '<'),
         1
       )
       ==
@@ -126,7 +126,7 @@ class CompilerSpec extends FunSuite {
   test("Find Closed Bracket - Case 3:\n>[+[--]>+]<\nshould return the index of 6 for the second open bracket") {
     assert(
       Compiler.findMatchingClosedBracket(
-        List('>', '[', '+', '[', '-', '-', ']', '>', '+', ']', '<'),
+        Seq('>', '[', '+', '[', '-', '-', ']', '>', '+', ']', '<'),
         3
       )
       ==
@@ -136,7 +136,7 @@ class CompilerSpec extends FunSuite {
   test("Find Closed Bracket - Case 4:\n>[+<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching closed bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.findMatchingClosedBracket(
-        List('>', '[', '+', '<'),
+        Seq('>', '[', '+', '<'),
         1
       )
     }
@@ -145,7 +145,7 @@ class CompilerSpec extends FunSuite {
   test("Find Closed Bracket - Case 5:\n>][+<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching closed bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.findMatchingClosedBracket(
-        List('>', ']', '[', '+', '<'),
+        Seq('>', ']', '[', '+', '<'),
         2
       )
     }
@@ -154,7 +154,7 @@ class CompilerSpec extends FunSuite {
   test("Find Open Bracket - Case 1:\n>[+]<\nshould return the index of 1") {
     assert(
       Compiler.findMatchingOpenBracket(
-        List('>', '[', '+', ']', '<'),
+        Seq('>', '[', '+', ']', '<'),
         3
       )
       ==
@@ -164,7 +164,7 @@ class CompilerSpec extends FunSuite {
   test("Find Open Bracket - Case 2:\n>[+[--]>+]<\nshould return the index of 1 for the last closed bracket") {
     assert(
       Compiler.findMatchingOpenBracket(
-        List('>', '[', '+', '[', '-', '-', ']', '>', '+', ']', '<'),
+        Seq('>', '[', '+', '[', '-', '-', ']', '>', '+', ']', '<'),
         9
       )
       ==
@@ -174,7 +174,7 @@ class CompilerSpec extends FunSuite {
   test("Find Open Bracket - Case 3:\n>[+[--]>+]<\nshould return the index of 3 for the second-to-last closed bracket") {
     assert(
       Compiler.findMatchingOpenBracket(
-        List('>', '[', '+', '[', '-', '-', ']', '>', '+', ']', '<'),
+        Seq('>', '[', '+', '[', '-', '-', ']', '>', '+', ']', '<'),
         6
       )
       ==
@@ -184,7 +184,7 @@ class CompilerSpec extends FunSuite {
   test("Find Open Bracket - Case 4:\n>+]<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.findMatchingOpenBracket(
-        List('>', '+', ']', '<'),
+        Seq('>', '+', ']', '<'),
         2
       )
     }
@@ -193,7 +193,7 @@ class CompilerSpec extends FunSuite {
   test("Find Open Bracket - Case 5:\n>+][<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.findMatchingOpenBracket(
-        List('>', '+', ']', '[', '<'),
+        Seq('>', '+', ']', '[', '<'),
         2
       )
     }
