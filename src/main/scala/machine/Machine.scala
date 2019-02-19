@@ -69,7 +69,9 @@ class Machine(
    *
    *  @param position the next instruction pointer position
    */
-  def jump(position: Int): Unit = { }
+  def jump(position: Int): Unit = {
+    instructionPointer = position
+  }
   /** Execute the specified sequence operations.
    *
    *  @param operations the operations to be executed
