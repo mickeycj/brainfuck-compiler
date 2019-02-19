@@ -13,10 +13,9 @@ class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
   /** Setup codes */
   val in: InputStream = mock[InputStream]
   val out: PrintStream = mock[PrintStream]
-  val tapes: Array[Int] = Array.fill[Int](10){0}
   var machine: Machine = _
   before {
-    machine = new Machine(in, out, tapes)
+    machine = new Machine(in, out, Array.fill[Int](10){0})
   }
   /** Tests for all BrainFuck's operations.
    *
@@ -39,5 +38,23 @@ class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
     machine.tapePointer = 1
     machine.decrementPointer(1)
     assert(machine.tapePointer == 0)
+  }
+  test("Increment Value - Case 1:\nValue at the current tape (value of 0) should be 1 after one function call.") {
+    machine.incrementValue(1)
+    assert(machine.tapes(machine.tapePointer) == 1)
+  }
+  test("Increment Value - Case 2:\nValue at the current tape (value of 127) should be 0 after one function call.") {
+    machine.tapes(machine.tapePointer) = 127
+    machine.incrementValue(1)
+    assert(machine.tapes(machine.tapePointer) == 0)
+  }
+  test("Decrement Value - Case 1:\nValue at the current tape (value of 0) should be 127 after one function call.") {
+    machine.decrementValue(1)
+    assert(machine.tapes(machine.tapePointer) == 127)
+  }
+  test("Decrement Value - Case 2:\nValue at the current tape (value of 1) should be 0 after one function call.") {
+    machine.tapes(machine.tapePointer) = 1
+    machine.decrementValue(1)
+    assert(machine.tapes(machine.tapePointer) == 0)
   }
 }
