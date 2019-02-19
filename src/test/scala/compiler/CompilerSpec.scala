@@ -476,4 +476,36 @@ class CompilerSpec extends FunSuite {
       )
     )
   }
+  test("Operations Mapping - Case 6:\n>[+<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching closed bracket found!\"") {
+    val e = intercept[InvalidSyntaxException] {
+      Compiler.mapToOperations(
+        Seq('>', '[', '+', '<')
+      )
+    }
+    assert(e.getMessage == "Syntax Error: no matching closed bracket found!")
+  }
+  test("Operations Mapping - Case 7:\n>][+<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
+    val e = intercept[InvalidSyntaxException] {
+      Compiler.mapToOperations(
+        Seq('>', ']', '[', '+', '<')
+      )
+    }
+    assert(e.getMessage == "Syntax Error: no matching open bracket found!")
+  }
+  test("Operations Mapping - Case 8:\n>+]<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
+    val e = intercept[InvalidSyntaxException] {
+      Compiler.mapToOperations(
+        Seq('>', '+', ']', '<')
+      )
+    }
+    assert(e.getMessage == "Syntax Error: no matching open bracket found!")
+  }
+  test("Operations Mapping - Case 9:\n>+][<\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
+    val e = intercept[InvalidSyntaxException] {
+      Compiler.mapToOperations(
+        Seq('>', '+', ']', '[', '<')
+      )
+    }
+    assert(e.getMessage == "Syntax Error: no matching open bracket found!")
+  }
 }
