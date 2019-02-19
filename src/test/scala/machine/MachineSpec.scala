@@ -5,7 +5,7 @@ import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
 import org.scalatest.FunSuite
 import org.scalatest.mockito.MockitoSugar
-import compiler.{Instruction, InvalidSyntaxException, Operation}
+import compiler.{Instruction, Operation}
 /** MachineSpec
  *
  *  Test suite for Machine class.
@@ -16,6 +16,8 @@ class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
   val out: PrintStream = mock[PrintStream]
   var machine: Machine = _
   before {
+    reset(in)
+    reset(out)
     machine = new Machine(in, out, Array.fill[Int](10){0})
   }
   /** Tests for all BrainFuck's operations.
@@ -60,13 +62,13 @@ class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
   }
   test("Print to OutputStream:\nShould print 'H' to OutputStream.") {
     machine.tapes(machine.tapePointer) = 72
-    machine.print(1)
+    machine.printChar(1)
     verify(out).print('H')
     verifyNoMoreInteractions(out)
   }
   test("Read from InputStream:\nShould read 72 ('H') from InputStream and write to the current tape.") {
     when(in.read).thenReturn(72)
-    machine.read(1)
+    machine.readChar(1)
     assert(machine.tapes(machine.tapePointer) == 72)
     verify(in).read
     verifyNoMoreInteractions(in)
@@ -172,17 +174,5 @@ class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
     assert(machine.tapes(machine.tapePointer) == 72)
     verify(in).read
     verifyNoMoreInteractions(in)
-  }
-  test("Execute Code with Wrong Syntax:\nShould throw 'InvalidSyntaxException after the execution.'") {
-    intercept[InvalidSyntaxException] {
-      machine.execute(
-        Seq(
-          new Operation(Instruction.INC_PTR, 1),
-          new Operation(Instruction.OPEN_BRACKET, 1),
-          new Operation(Instruction.INC_VAL, 1),
-          new Operation(Instruction.DEC_PTR, 1)
-        )
-      )
-    }
   }
 }
