@@ -71,7 +71,7 @@ class Machine(
    */
   @throws(classOf[IOException])
   def read(times: Int): Unit = {
-    tapes(tapePointer) = in.read()
+    tapes(tapePointer) = in.read
     times match {
       case 1 =>
       case _ => read(times - 1)
