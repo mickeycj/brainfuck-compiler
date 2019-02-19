@@ -1,6 +1,7 @@
 package machine
 /** Imports */
 import java.io.{IOException, InputStream, PrintStream}
+import compiler.Operation
 /** Class for running BrainFuck's compiled codes.
  *
  *  This class deals with reading BrainFuck's files and executing compiled codes.
@@ -8,7 +9,7 @@ import java.io.{IOException, InputStream, PrintStream}
 class Machine(
   val in: InputStream,
   val out: PrintStream,
-  val tapes: Array[Int] = Array.fill[Int](Short.MaxValue){0},
+  var tapes: Array[Int] = Array.fill[Int](Short.MaxValue){0},
   var tapePointer: Int = 0,
   var instructionPointer: Int = 0
 ) {
@@ -36,7 +37,7 @@ class Machine(
    *
    *  @param times the number of times to read
    */
-   @throws(classOf[IOException])
+  @throws(classOf[IOException])
   def read(times: Int): Unit = { }
   /** Print to the output stream.
    *
@@ -48,8 +49,18 @@ class Machine(
    *  @param position the next instruction pointer position
    */
   def jump(position: Int): Unit = { }
+  /** Execute the specified sequence operations.
+   *
+   *  @param operations the operations to be executed
+   */
+  @throws(classOf[IOException])
+  def execute(operations: Seq[Operation]): Unit = { }
   /** Clear the tapes.
    *
    */
-  def clear(): Unit = { }
+  def clear(): Unit = {
+    tapes = Array.fill[Int](tapes.length){0}
+    tapePointer = 0
+    instructionPointer = 0
+  }
 }

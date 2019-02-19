@@ -4,5 +4,6 @@ organization := "com.mickeycj"
 lazy val brainfuckcompiler = (project in file("."))
   .settings(
     name := "BrainFuckCompiler",
-    libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % Test
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % Test,
+    libraryDependencies += "org.mockito" %% "mockito-scala" % "1.1.4" % Test
   )
