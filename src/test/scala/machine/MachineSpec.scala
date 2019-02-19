@@ -60,14 +60,14 @@ class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
   test("Print to OutputStream:\nShould print 'H' to OutputStream.") {
     machine.tapes(machine.tapePointer) = 72
     machine.print(1)
-    verify(out, times(1)).print('H')
+    verify(out).print('H')
     verifyNoMoreInteractions(out)
   }
   test("Read from InputStream:\nShould read 72 ('H') from InputStream and write to the current tape.") {
     when(in.read).thenReturn(72)
     machine.read(1)
     assert(machine.tapes(machine.tapePointer) == 72)
-    verify(in, times(1)).read
+    verify(in).read
     verifyNoMoreInteractions(in)
   }
 }
