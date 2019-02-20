@@ -159,7 +159,18 @@ object Compiler {
    *  @return an updated sequence of operations
    */
   @throws(classOf[InvalidSyntaxException])
-  def updateJumps(operations: Seq[Operation]): Seq[Operation] = Seq[Operation]()
+  def updateJumps(operations: Seq[Operation]): Seq[Operation] = {
+    val tokens = operations.map(_.instruction)
+    operations.map { case operation =>
+      val token = operation.instruction
+      val position = operation.argument
+      token match {
+        case Instruction.OPEN_BRACKET => new Operation(token, findMatchingClosedBracket(tokens, position))
+        case Instruction.CLOSED_BRACKET => new Operation(token, findMatchingOpenBracket(tokens, position))
+        case _ => operation
+      }
+    } 
+  }
   /** Compile the input program into Brainfuck's operations.
    *
    *  @param program the string of the program to be compiled

@@ -602,7 +602,7 @@ class CompilerSpec extends FunSuite {
     }
     assert(e.getMessage == "Syntax Error: no matching closed bracket found!")
   }
-  test("Jumps Update - Case 5:\n'>', ']', '[', '+' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching closed bracket found!\"") {
+  test("Jumps Update - Case 5:\n'>', ']', '[', '+' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.updateJumps(
         Seq(
@@ -614,7 +614,7 @@ class CompilerSpec extends FunSuite {
         )
       )
     }
-    assert(e.getMessage == "Syntax Error: no matching closed bracket found!")
+    assert(e.getMessage == "Syntax Error: no matching open bracket found!")
   }
   test("Jumps Update - Case 6:\n'>', '+', ']' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
