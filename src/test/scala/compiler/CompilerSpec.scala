@@ -346,37 +346,70 @@ class CompilerSpec extends FunSuite {
   test("Find Closed Bracket - Case 1:\n'>', '[', '+', ']' and '<'\nshould return the index of 3") {
     assert(
       Compiler.findMatchingClosedBracket(
-        Seq('>', '[', '+', ']', '<'),
+        Seq(
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.OPEN_BRACKET, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.CLOSED_BRACKET, 3),
+          new Operation(Instruction.DEC_PTR, 1)
+        ),
         1
       )
       ==
       3
     )
   }
-  test("Find Closed Bracket - Case 2:\n'>', '[', '+', '[', '-', '-', ']', '>', '+', ']' and '<'\nshould return the index of 9 for the first open bracket") {
+  test("Find Closed Bracket - Case 2:\n'>', '[', '+', '[', '-', '-', ']', '>', '+', ']' and '<'\nshould return the index of 8 for the first open bracket") {
     assert(
       Compiler.findMatchingClosedBracket(
-        Seq('>', '[', '+', '[', '-', '-', ']', '>', '+', ']', '<'),
+        Seq(
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.OPEN_BRACKET, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.OPEN_BRACKET, 3),
+          new Operation(Instruction.DEC_PTR, 2),
+          new Operation(Instruction.CLOSED_BRACKET, 5),
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.CLOSED_BRACKET, 8),
+          new Operation(Instruction.DEC_PTR, 1)
+        ),
         1
       )
       ==
-      9
+      8
     )
   }
-  test("Find Closed Bracket - Case 3:\n'>', '[', '+', '[', '-', '-', ']', '>', '+', ']' and '<'\nshould return the index of 6 for the second open bracket") {
+  test("Find Closed Bracket - Case 3:\n'>', '[', '+', '[', '-', '-', ']', '>', '+', ']' and '<'\nshould return the index of 5 for the second open bracket") {
     assert(
       Compiler.findMatchingClosedBracket(
-        Seq('>', '[', '+', '[', '-', '-', ']', '>', '+', ']', '<'),
+        Seq(
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.OPEN_BRACKET, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.OPEN_BRACKET, 3),
+          new Operation(Instruction.DEC_PTR, 2),
+          new Operation(Instruction.CLOSED_BRACKET, 5),
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.CLOSED_BRACKET, 8),
+          new Operation(Instruction.DEC_PTR, 1)
+        ),
         3
       )
       ==
-      6
+      5
     )
   }
   test("Find Closed Bracket - Case 4:\n'>', '[', '+' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching closed bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.findMatchingClosedBracket(
-        Seq('>', '[', '+', '<'),
+        Seq(
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.OPEN_BRACKET, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.DEC_PTR, 1)
+        ),
         1
       )
     }
@@ -385,7 +418,13 @@ class CompilerSpec extends FunSuite {
   test("Find Closed Bracket - Case 5:\n'>', ']', '[', '+' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching closed bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.findMatchingClosedBracket(
-        Seq('>', ']', '[', '+', '<'),
+        Seq(
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.CLOSED_BRACKET, 1),
+          new Operation(Instruction.OPEN_BRACKET, 2),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.DEC_PTR, 1)
+        ),
         2
       )
     }
@@ -394,7 +433,13 @@ class CompilerSpec extends FunSuite {
   test("Find Open Bracket - Case 1:\n'>', '[', '+', ']' and '<'\nshould return the index of 1") {
     assert(
       Compiler.findMatchingOpenBracket(
-        Seq('>', '[', '+', ']', '<'),
+        Seq(
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.OPEN_BRACKET, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.CLOSED_BRACKET, 3),
+          new Operation(Instruction.DEC_PTR, 1)
+        ),
         3
       )
       ==
@@ -404,8 +449,19 @@ class CompilerSpec extends FunSuite {
   test("Find Open Bracket - Case 2:\n'>', '[', '+', '[', '-', '-', ']', '>', '+', ']' and '<'\nshould return the index of 1 for the last closed bracket") {
     assert(
       Compiler.findMatchingOpenBracket(
-        Seq('>', '[', '+', '[', '-', '-', ']', '>', '+', ']', '<'),
-        9
+        Seq(
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.OPEN_BRACKET, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.OPEN_BRACKET, 3),
+          new Operation(Instruction.DEC_PTR, 2),
+          new Operation(Instruction.CLOSED_BRACKET, 5),
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.CLOSED_BRACKET, 8),
+          new Operation(Instruction.DEC_PTR, 1)
+        ),
+        8
       )
       ==
       1
@@ -414,8 +470,19 @@ class CompilerSpec extends FunSuite {
   test("Find Open Bracket - Case 3:\n'>', '[', '+', '[', '-', '-', ']', '>', '+', ']' and '<'\nshould return the index of 3 for the second-to-last closed bracket") {
     assert(
       Compiler.findMatchingOpenBracket(
-        Seq('>', '[', '+', '[', '-', '-', ']', '>', '+', ']', '<'),
-        6
+        Seq(
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.OPEN_BRACKET, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.OPEN_BRACKET, 3),
+          new Operation(Instruction.DEC_PTR, 2),
+          new Operation(Instruction.CLOSED_BRACKET, 5),
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.CLOSED_BRACKET, 8),
+          new Operation(Instruction.DEC_PTR, 1)
+        ),
+        5
       )
       ==
       3
@@ -424,8 +491,12 @@ class CompilerSpec extends FunSuite {
   test("Find Open Bracket - Case 4:\n'>', '+', ']' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.findMatchingOpenBracket(
-        
-        Seq('>', '+', ']', '<'),
+        Seq(
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.CLOSED_BRACKET, 2),
+          new Operation(Instruction.DEC_PTR, 1)
+        ),
         2
       )
     }
@@ -434,7 +505,13 @@ class CompilerSpec extends FunSuite {
   test("Find Open Bracket - Case 5:\n'>', '+', ']', '[' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.findMatchingOpenBracket(
-        Seq('>', '+', ']', '[', '<'),
+        Seq(
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.CLOSED_BRACKET, 2),
+          new Operation(Instruction.OPEN_BRACKET, 3),
+          new Operation(Instruction.DEC_PTR, 1)
+        ),
         2
       )
     }
