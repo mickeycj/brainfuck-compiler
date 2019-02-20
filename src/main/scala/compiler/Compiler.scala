@@ -21,7 +21,30 @@ object Compiler {
    *  @param position the current position of the token
    *  @return an operation with the appropriate argument
    */
-  def foldTokens(tokens: Seq[Char], position: Int): Operation = new Operation('\n', 0)
+  def foldTokens(tokens: Seq[Char], position: Int): Operation = {
+    foldTokensAccumulator(tokens, position + 1)
+  }
+  /** Helper method for folding tokens.
+   *
+   *  @param tokens a sequence of tokens to be converted
+   *  @param position the current position of the token
+   *  @param count the number of duplicates found 
+   *  @return an operation with theh appropriate argument
+   */
+  @tailrec
+  def foldTokensAccumulator(tokens: Seq[Char], position: Int, count: Int = 1): Operation = {
+    val PrevToken = tokens(position - 1)
+    val Length = tokens.length
+    position match {
+      case Length => new Operation(PrevToken, count)
+      case _ => {
+        tokens(position) match {
+          case PrevToken => foldTokensAccumulator(tokens, position + 1, count + 1)
+          case _ => new Operation(PrevToken, count)
+        }
+      }
+    }
+  }
   /** Map each token to an appropriate operation.
    *
    *  @param tokens a sequence of tokens to be converted
