@@ -178,6 +178,6 @@ object Compiler {
    */
   @throws(classOf[InvalidSyntaxException])
   def compile(program: String): Seq[Operation] = {
-    mapToOperations(tokenize(program))
+    updateJumps(mapToOperations(tokenize(program)))
   }
 }
