@@ -192,19 +192,19 @@ class CompilerSpec extends FunSuite {
       Seq(
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.READ, 1),
-        new Operation(Instruction.OPEN_BRACKET, 5),
+        new Operation(Instruction.OPEN_BRACKET, 2),
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.READ, 1),
-        new Operation(Instruction.CLOSED_BRACKET, 2),
+        new Operation(Instruction.CLOSED_BRACKET, 5),
         new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.OPEN_BRACKET, 9),
+        new Operation(Instruction.OPEN_BRACKET, 7),
         new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.CLOSED_BRACKET, 7),
+        new Operation(Instruction.CLOSED_BRACKET, 9),
         new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.OPEN_BRACKET, 14),
+        new Operation(Instruction.OPEN_BRACKET, 11),
         new Operation(Instruction.PRINT, 1),
         new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.CLOSED_BRACKET, 11)
+        new Operation(Instruction.CLOSED_BRACKET, 14)
       )
     )
   }

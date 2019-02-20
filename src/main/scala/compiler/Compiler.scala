@@ -51,11 +51,32 @@ object Compiler {
    *  @return a sequence of operations
    */
   def mapToOperations(tokens: Seq[Char]): Seq[Operation] = {
-    tokens.zipWithIndex.map { case (token, index) =>
-      token match {
-        case Instruction.OPEN_BRACKET => new Operation(token, findMatchingClosedBracket(tokens, index))
-        case Instruction.CLOSED_BRACKET => new Operation(token, findMatchingOpenBracket(tokens, index))
-        case _ => new Operation(token, 1)
+    mapToOperationsAccumulator(tokens)
+  }
+  /** Helper method for mapping tokens to operations.
+   *
+   *  @param tokens a sequence of tokens to be converted
+   *  @param position the current position of the token
+   *  @param accum accumulated result
+   *  @return a sequence of operations
+   */
+  @tailrec
+  def mapToOperationsAccumulator(tokens: Seq[Char], position: Int = 0, accum: List[Operation] = List[Operation]()): Seq[Operation] = {
+    val Length = tokens.length
+    position match {
+      case Length => accum.reverse
+      case _ => {
+        var operation = new Operation('\n', 0)
+        var jump = 1
+        val token = tokens(position)
+        token match {
+          case Instruction.OPEN_BRACKET | Instruction.CLOSED_BRACKET => operation = new Operation(token, accum.length)
+          case _ => {
+            operation = foldTokens(tokens, position)
+            jump = operation.argument
+          }
+        }
+        mapToOperationsAccumulator(tokens, position + jump, operation :: accum)
       }
     }
   }
