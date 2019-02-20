@@ -100,6 +100,244 @@ class CompilerSpec extends FunSuite {
       )
     )
   }
+  /** Tests for tokens folding.
+   *
+   *  Each sequence of duplicated tokens should fold into a single operation with the appropriate argument.
+   */
+  test("Tokens Folding - Case 1:\nshould return an operation with 1 as an argument") {
+    assert(
+      Compiler.foldTokens(
+        Seq(
+          '>', '+', '<'
+        ),
+        1
+      )
+      ==
+      new Operation(Instruction.INC_VAL, 1)
+    )
+  }
+  test("Tokens Folding - Case 2:\nshould return an operation with 2 as an argument") {
+    assert(
+      Compiler.foldTokens(
+        Seq(
+          '+', '+',
+          '>', '+', '+', '+', '+', '+',
+          '[',
+            '<', '+',
+            '>', '-',
+          ']'
+        ),
+        0
+      )
+      ==
+      new Operation(Instruction.INC_VAL, 2)
+    )
+  }
+  test("Tokens Folding - Case 3:\nshould return an operation with 15 as an argument") {
+    assert(
+      Compiler.foldTokens(
+        Seq(
+          '+', '+', '+', '+', '+', '+', '+',
+          '+', '+', '+', '+', '+', '+', '+', '+',
+          '[',
+            '<', '+', '+', '+', '+', '+', '+',
+            '>', '-',
+          ']',
+          '<', '.'
+        ),
+        0
+      )
+      ==
+      new Operation(Instruction.INC_VAL, 15)
+    )
+  }
+  /** Tests for initial operations mapping.
+   *
+   *  Each sequence of tokens should map to an appropriate sequence of operations.
+   */
+  test("Operations Mapping - Case 1:\n'>', '+' and '<'\nshould return the correct sequence of operations.") {
+    assert(
+      Compiler.mapToOperations(
+        Seq(
+          '>', '+', '<'
+        )
+      )
+      ==
+      Seq(
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.DEC_PTR, 1)
+      )
+    )
+  }
+  test("Operations Mapping - Case 2:\n'>', ',', '[', '>', ',', ']', '<', '[', '<', ']', '>', '[', '.', '>' and ']'\nshould return the correct sequence of operations.") {
+    assert(
+      Compiler.mapToOperations(
+        Seq(
+          '>', ',',
+          '[',
+            '>', ',',
+          ']',
+          '<',
+          '[',
+            '<',
+          ']',
+          '>',
+          '[',
+            '.', '>',
+          ']'
+        )
+      )
+      ==
+      Seq(
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.READ, 1),
+        new Operation(Instruction.OPEN_BRACKET, 5),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.READ, 1),
+        new Operation(Instruction.CLOSED_BRACKET, 2),
+        new Operation(Instruction.DEC_PTR, 1),
+        new Operation(Instruction.OPEN_BRACKET, 9),
+        new Operation(Instruction.DEC_PTR, 1),
+        new Operation(Instruction.CLOSED_BRACKET, 7),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.OPEN_BRACKET, 14),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.CLOSED_BRACKET, 11)
+      )
+    )
+  }
+  test("Operations Mapping - Case 3:\n'+', '+', '>', '+', '+', '+', '+', '+', '[', '<', '+', '>', '-' and ']'\nshould return the correct sequence of operations.") {
+    assert(
+      Compiler.mapToOperations(
+        Seq(
+          '+', '+',
+          '>', '+', '+', '+', '+', '+',
+          '[',
+            '<', '+',
+            '>', '-',
+          ']'
+        )
+      )
+      ==
+      Seq(
+        new Operation(Instruction.INC_VAL, 2),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 5),
+        new Operation(Instruction.OPEN_BRACKET, 3),
+        new Operation(Instruction.DEC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.CLOSED_BRACKET, 8)
+      )
+    )
+  }
+  test("Operations Mapping - Case 4:\n'+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '[', '<', '+', '+', '+', '+', '+', '+', '>', '-', ']', '<' and '.'\nshould return the correct sequence of operations.") {
+    assert(
+      Compiler.mapToOperations(
+        Seq(
+          '+', '+', '+', '+', '+', '+', '+',
+          '+', '+', '+', '+', '+', '+', '+', '+',
+          '[',
+            '<', '+', '+', '+', '+', '+', '+',
+            '>', '-',
+          ']',
+          '<', '.'
+        )
+      )
+      ==
+      Seq(
+        new Operation(Instruction.INC_VAL, 15),
+        new Operation(Instruction.OPEN_BRACKET, 1),
+        new Operation(Instruction.DEC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 6),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.CLOSED_BRACKET, 6),
+        new Operation(Instruction.DEC_PTR, 1),
+        new Operation(Instruction.PRINT, 1)
+      )
+    )
+  }
+  test("Operations Mapping - Case 5:\n'+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '[', '>', '+', '+', '+', '+', '+', '+', '+', '>', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '>', '+', '+', '+', '+', '>', '+', '<', '<', '<', '<', '-', ']', '>', '+', '+', '.', '>', '+', '.', '+', '+', '+', '+', '+', '+', '+', '.', '.', '+', '+', '+', '.', '>', '+', '+', '+', '+', '.', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '.', '<', '<', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '.', '>', '.', '+', '+', '+', '.', '-', '-', '-', '-', '-', '-', '.', '-', '-', '-', '-', '-', '-', '-', '-', '.', '>', '+', '.', '>' and '.'\nshould return the correct sequence of operations.") {
+    assert(
+      Compiler.mapToOperations(
+        Seq(
+          '+', '+', '+', '+', '+', '+', '+', '+', '+', '+',
+          '[',
+            '>', '+', '+', '+', '+', '+', '+', '+',
+            '>', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+',
+            '>', '+', '+', '+', '+',
+            '>', '+',
+            '<', '<', '<', '<', '-',
+          ']',
+          '>', '+', '+', '.',
+          '>', '+', '.',
+          '+', '+', '+', '+', '+', '+', '+', '.',
+          '.',
+          '+', '+', '+', '.',
+          '>', '+', '+', '+', '+', '.',
+          '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '.',
+          '<', '<', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '.',
+          '>', '.',
+          '+', '+', '+', '.',
+          '-', '-', '-', '-', '-', '-', '.',
+          '-', '-', '-', '-', '-', '-', '-', '-', '.',
+          '>', '+', '.',
+          '>', '.'
+        )
+      )
+      ===
+      Seq(
+        new Operation(Instruction.INC_VAL, 10),
+        new Operation(Instruction.OPEN_BRACKET, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 7),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 10),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 4),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.DEC_PTR, 4),
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.CLOSED_BRACKET, 12),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 2),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.INC_VAL, 7),
+        new Operation(Instruction.PRINT, 2),
+        new Operation(Instruction.INC_VAL, 3),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 4),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.DEC_VAL, 12),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.DEC_PTR, 2),
+        new Operation(Instruction.INC_VAL, 15),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.INC_VAL, 3),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.DEC_VAL, 6),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.DEC_VAL, 8),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.PRINT, 1),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.PRINT, 1)
+      )
+    )
+  }
   /** Tests for finding loop jumps.
    *
    *  Each open/closed bracket must have a matching pair.
@@ -186,6 +424,7 @@ class CompilerSpec extends FunSuite {
   test("Find Open Bracket - Case 4:\n'>', '+', ']' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
       Compiler.findMatchingOpenBracket(
+        
         Seq('>', '+', ']', '<'),
         2
       )
@@ -201,291 +440,146 @@ class CompilerSpec extends FunSuite {
     }
     assert(e.getMessage == "Syntax Error: no matching open bracket found!")
   }
-  /** Tests for operations mapping.
-   *
-   *  Each sequence of tokens should map to an appropriate sequence of operations with the right arguments.
-   */
-  test("Operations Mapping - Case 1:\n'>', '+' and '<'\nshould return the correct sequence of operations.") {
+  test("Jumps Update - Case 1:\n'>', '[', '+', ']' and '<'\nshould correctly update the jumps.") {
     assert(
-      Compiler.mapToOperations(
+      Compiler.updateJumps(
         Seq(
-          '>', '+', '<'
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.OPEN_BRACKET, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.CLOSED_BRACKET, 3),
+          new Operation(Instruction.DEC_PTR, 1)
         )
       )
       ==
       Seq(
         new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.OPEN_BRACKET, 3),
         new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.CLOSED_BRACKET, 1),
         new Operation(Instruction.DEC_PTR, 1)
       )
     )
   }
-  test("Operations Mapping - Case 2:\n'>', ',', '[', '>', ',', ']', '<', '[', '<', ']', '>', '[', '.', '>' and ']'\nshould return the correct sequence of operations.") {
+  test("Jumps Update - Case 2:\n'+', '>', '+', '[', '<', '+', '>', '-' and ']'\nshould correctly update the jumps.") {
     assert(
-      Compiler.mapToOperations(
+      Compiler.updateJumps(
         Seq(
-          '>', ',',
-          '[',
-            '>', ',',
-          ']',
-          '<',
-          '[',
-            '<',
-          ']',
-          '>',
-          '[',
-            '.', '>',
-          ']'
+          new Operation(Instruction.INC_VAL, 2),
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 5),
+          new Operation(Instruction.OPEN_BRACKET, 3),
+          new Operation(Instruction.DEC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.DEC_VAL, 1),
+          new Operation(Instruction.CLOSED_BRACKET, 8)
         )
       )
       ==
       Seq(
+        new Operation(Instruction.INC_VAL, 2),
         new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.READ, 1),
-        new Operation(Instruction.OPEN_BRACKET, 5),
-        new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.READ, 1),
-        new Operation(Instruction.CLOSED_BRACKET, 2),
+        new Operation(Instruction.INC_VAL, 5),
+        new Operation(Instruction.OPEN_BRACKET, 8),
         new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.OPEN_BRACKET, 9),
-        new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.CLOSED_BRACKET, 7),
+        new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.OPEN_BRACKET, 14),
-        new Operation(Instruction.PRINT, 1),
-        new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.CLOSED_BRACKET, 11)
+        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.CLOSED_BRACKET, 3)
       )
     )
   }
-  test("Operations Mapping - Case 3:\n'+', '+', '>', '+', '+', '+', '+', '+', '[', '<', '+', '>', '-' and ']'\nshould return the correct sequence of operations.") {
+  test("Jumps Update - Case 3:\n'+', '[', '>', '+', '>', '+', '>', '+', '>', '+', '<', '-', ']', '>', '+', '.', '>', '+', '.', '+', '.', '+', '.', '>', '+', '.', '-', '.', '<', '+', '.', '>', '.', '+', '.', '-', '.', '-', '.', '>', '+', '.', '>' and '.'\nshould correctly update teh jumps.") {
     assert(
-      Compiler.mapToOperations(
+      Compiler.updateJumps(
         Seq(
-          '+', '+',
-          '>', '+', '+', '+', '+', '+',
-          '[',
-            '<', '+',
-            '>', '-',
-          ']'
+          new Operation(Instruction.INC_VAL, 10),
+          new Operation(Instruction.OPEN_BRACKET, 1),
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 7),
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 10),
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 4),
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.DEC_PTR, 4),
+          new Operation(Instruction.DEC_VAL, 1),
+          new Operation(Instruction.CLOSED_BRACKET, 12),
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 2),
+          new Operation(Instruction.PRINT, 1),
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.PRINT, 1),
+          new Operation(Instruction.INC_VAL, 7),
+          new Operation(Instruction.PRINT, 2),
+          new Operation(Instruction.INC_VAL, 3),
+          new Operation(Instruction.PRINT, 1),
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 4),
+          new Operation(Instruction.PRINT, 1),
+          new Operation(Instruction.DEC_VAL, 12),
+          new Operation(Instruction.PRINT, 1),
+          new Operation(Instruction.DEC_PTR, 2),
+          new Operation(Instruction.INC_VAL, 15),
+          new Operation(Instruction.PRINT, 1),
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.PRINT, 1),
+          new Operation(Instruction.INC_VAL, 3),
+          new Operation(Instruction.PRINT, 1),
+          new Operation(Instruction.DEC_VAL, 6),
+          new Operation(Instruction.PRINT, 1),
+          new Operation(Instruction.DEC_VAL, 8),
+          new Operation(Instruction.PRINT, 1),
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.PRINT, 1),
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.PRINT, 1)
         )
       )
       ==
       Seq(
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 10),
+        new Operation(Instruction.OPEN_BRACKET, 12),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 7),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 10),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 4),
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.OPEN_BRACKET, 13),
-        new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.DEC_PTR, 4),
         new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.CLOSED_BRACKET, 8)
-      )
-    )
-  }
-  test("Operations Mapping - Case 4:\n'+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '[', '<', '+', '+', '+', '+', '+', '+', '>', '-', ']', '<' and '.'\nshould return the correct sequence of operations.") {
-    assert(
-      Compiler.mapToOperations(
-        Seq(
-          '+', '+', '+', '+', '+', '+', '+',
-          '+', '+', '+', '+', '+', '+', '+', '+',
-          '[',
-            '<', '+', '+', '+', '+', '+', '+',
-            '>', '-',
-          ']',
-          '<', '.'
-        )
-      )
-      ==
-      Seq(
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.OPEN_BRACKET, 25),
-        new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.CLOSED_BRACKET, 1),
         new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.CLOSED_BRACKET, 15),
-        new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.PRINT, 1)
-      )
-    )
-  }
-  test("Operations Mapping - Case 5:\n'+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '[', '>', '+', '+', '+', '+', '+', '+', '+', '>', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '>', '+', '+', '+', '+', '>', '+', '<', '<', '<', '<' '-', ']', '>', '+', '+', '.', '>', '+', '.', '+', '+', '+', '+', '+', '+', '+', '.', '.', '+', '+', '+', '.', '>', '+', '+', '+', '+', '.', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '.', '<', '<', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+' '.', '>', '.', '+', '+', '+', '.', '-', '-', '-', '-', '-', '-', '.', '-', '-', '-', '-', '-', '-', '-', '-', '.', '>', '+', '.', '>' and '.'\nshould return the correct sequence of operations.") {
-    assert(
-      Compiler.mapToOperations(
-        Seq(
-          '+', '+', '+', '+', '+', '+', '+', '+', '+', '+',
-          '[',
-            '>', '+', '+', '+', '+', '+', '+', '+',
-            '>', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+',
-            '>', '+', '+', '+', '+',
-            '>', '+',
-            '<', '<', '<', '<', '-',
-          ']',
-          '>', '+', '+', '.',
-          '>', '+', '.',
-          '+', '+', '+', '+', '+', '+', '+', '.',
-          '.',
-          '+', '+', '+', '.',
-          '>', '+', '+', '+', '+', '.',
-          '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '.',
-          '<', '<', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '.',
-          '>', '.',
-          '+', '+', '+', '.',
-          '-', '-', '-', '-', '-', '-', '.',
-          '-', '-', '-', '-', '-', '-', '-', '-', '.',
-          '>', '+', '.',
-          '>', '.'
-        )
-      )
-      ===
-      Seq(
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.OPEN_BRACKET, 42),
-        new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.CLOSED_BRACKET, 10),
-        new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 2),
         new Operation(Instruction.PRINT, 1),
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.PRINT, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.PRINT, 1),
-        new Operation(Instruction.PRINT, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 7),
+        new Operation(Instruction.PRINT, 2),
+        new Operation(Instruction.INC_VAL, 3),
         new Operation(Instruction.PRINT, 1),
         new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 4),
         new Operation(Instruction.PRINT, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 12),
         new Operation(Instruction.PRINT, 1),
-        new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.DEC_PTR, 2),
+        new Operation(Instruction.INC_VAL, 15),
         new Operation(Instruction.PRINT, 1),
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.PRINT, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 3),
         new Operation(Instruction.PRINT, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 6),
         new Operation(Instruction.PRINT, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 8),
         new Operation(Instruction.PRINT, 1),
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.INC_VAL, 1),
@@ -495,34 +589,56 @@ class CompilerSpec extends FunSuite {
       )
     )
   }
-  test("Operations Mapping - Case 6:\n'>', '[', '+' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching closed bracket found!\"") {
+  test("Jumps Update - Case 4:\n'>', '[', '+' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching closed bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
-      Compiler.mapToOperations(
-        Seq('>', '[', '+', '<')
+      Compiler.updateJumps(
+        Seq(
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.OPEN_BRACKET, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.DEC_PTR, 1)
+        )
       )
     }
     assert(e.getMessage == "Syntax Error: no matching closed bracket found!")
   }
-  test("Operations Mapping - Case 7:\n'>', ']', '[', '+' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
+  test("Jumps Update - Case 5:\n'>', ']', '[', '+' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching closed bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
-      Compiler.mapToOperations(
-        Seq('>', ']', '[', '+', '<')
+      Compiler.updateJumps(
+        Seq(
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.CLOSED_BRACKET, 1),
+          new Operation(Instruction.OPEN_BRACKET, 2),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.DEC_PTR, 1)
+        )
+      )
+    }
+    assert(e.getMessage == "Syntax Error: no matching closed bracket found!")
+  }
+  test("Jumps Update - Case 6:\n'>', '+', ']' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
+    val e = intercept[InvalidSyntaxException] {
+      Compiler.updateJumps(
+        Seq(
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.CLOSED_BRACKET, 2),
+          new Operation(Instruction.DEC_PTR, 1)
+        )
       )
     }
     assert(e.getMessage == "Syntax Error: no matching open bracket found!")
   }
-  test("Operations Mapping - Case 8:\n'>', '+', ']' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
+  test("Jumps Update - Case 7:\n'>', '+', ']', '[' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
     val e = intercept[InvalidSyntaxException] {
-      Compiler.mapToOperations(
-        Seq('>', '+', ']', '<')
-      )
-    }
-    assert(e.getMessage == "Syntax Error: no matching open bracket found!")
-  }
-  test("Operations Mapping - Case 9:\n'>', '+', ']', '[' and '<'\nshould throw InvalidSyntaxException with message: \"Syntax Error: no matching open bracket found!\"") {
-    val e = intercept[InvalidSyntaxException] {
-      Compiler.mapToOperations(
-        Seq('>', '+', ']', '[', '<')
+      Compiler.updateJumps(
+        Seq(
+          new Operation(Instruction.INC_PTR, 1),
+          new Operation(Instruction.INC_VAL, 1),
+          new Operation(Instruction.CLOSED_BRACKET, 2),
+          new Operation(Instruction.OPEN_BRACKET, 3),
+          new Operation(Instruction.DEC_PTR, 1)
+        )
       )
     }
     assert(e.getMessage == "Syntax Error: no matching open bracket found!")
@@ -570,20 +686,15 @@ class CompilerSpec extends FunSuite {
       Compiler.compile("++\n> +++++\n\n[\n\t< +\n\t> -\n]")
       ==
       Seq(
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 2),
         new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.OPEN_BRACKET, 13),
+        new Operation(Instruction.INC_VAL, 5),
+        new Operation(Instruction.OPEN_BRACKET, 8),
         new Operation(Instruction.DEC_PTR, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.CLOSED_BRACKET, 8)
+        new Operation(Instruction.CLOSED_BRACKET, 3)
       )
     )
   }
@@ -592,32 +703,13 @@ class CompilerSpec extends FunSuite {
       Compiler.compile("+++++++\n++++ ++++\n[\n\t< +++ +++\n\t> -\n]\n< .")
       ==
       Seq(
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.OPEN_BRACKET, 25),
+        new Operation(Instruction.INC_VAL, 15),
+        new Operation(Instruction.OPEN_BRACKET, 6),
         new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 6),
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.CLOSED_BRACKET, 15),
+        new Operation(Instruction.CLOSED_BRACKET, 1),
         new Operation(Instruction.DEC_PTR, 1),
         new Operation(Instruction.PRINT, 1)
       )
@@ -628,127 +720,44 @@ class CompilerSpec extends FunSuite {
       Compiler.compile("+++++ +++++\n[\n\t> +++++ ++\n\t> +++++ +++++\n\t> ++++\n\t> +\n\t<<<< -\n]\n> ++ .\n> + .\n+++++ ++ .\n.\n+++ .\n> ++++ .\n----- ----- -- .\n<< +++++ +++++ +++++ .\n> .\n+++ .\n----- - .\n----- --- .\n> + .\n> .")
       ===
       Seq(
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.OPEN_BRACKET, 42),
+        new Operation(Instruction.INC_VAL, 10),
+        new Operation(Instruction.OPEN_BRACKET, 12),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 7),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 10),
+        new Operation(Instruction.INC_PTR, 1),
+        new Operation(Instruction.INC_VAL, 4),
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.DEC_PTR, 1),
+        new Operation(Instruction.DEC_PTR, 4),
         new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.CLOSED_BRACKET, 10),
+        new Operation(Instruction.CLOSED_BRACKET, 1),
         new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 2),
         new Operation(Instruction.PRINT, 1),
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.INC_VAL, 1),
         new Operation(Instruction.PRINT, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.PRINT, 1),
-        new Operation(Instruction.PRINT, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 7),
+        new Operation(Instruction.PRINT, 2),
+        new Operation(Instruction.INC_VAL, 3),
         new Operation(Instruction.PRINT, 1),
         new Operation(Instruction.INC_PTR, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 4),
         new Operation(Instruction.PRINT, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 12),
         new Operation(Instruction.PRINT, 1),
-        new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.DEC_PTR, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.DEC_PTR, 2),
+        new Operation(Instruction.INC_VAL, 15),
         new Operation(Instruction.PRINT, 1),
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.PRINT, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
-        new Operation(Instruction.INC_VAL, 1),
+        new Operation(Instruction.INC_VAL, 3),
         new Operation(Instruction.PRINT, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 6),
         new Operation(Instruction.PRINT, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
-        new Operation(Instruction.DEC_VAL, 1),
+        new Operation(Instruction.DEC_VAL, 8),
         new Operation(Instruction.PRINT, 1),
         new Operation(Instruction.INC_PTR, 1),
         new Operation(Instruction.INC_VAL, 1),

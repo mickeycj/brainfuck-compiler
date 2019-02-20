@@ -15,6 +15,27 @@ object Compiler {
   def tokenize(program: String): Seq[Char] = {
     program.replaceAll(Instruction.INSTRUCTIONS_REGEX, "").toArray.toList
   }
+  /** Fold duplicated tokens into a single operation.
+   *
+   *  @param tokens a sequence of tokens to be converted
+   *  @param position the current position of the token
+   *  @return an operation with the appropriate argument
+   */
+  def foldTokens(tokens: Seq[Char], position: Int): Operation = new Operation('\n', 0)
+  /** Map each token to an appropriate operation.
+   *
+   *  @param tokens a sequence of tokens to be converted
+   *  @return a sequence of operations
+   */
+  def mapToOperations(tokens: Seq[Char]): Seq[Operation] = {
+    tokens.zipWithIndex.map { case (token, index) =>
+      token match {
+        case Instruction.OPEN_BRACKET => new Operation(token, findMatchingClosedBracket(tokens, index))
+        case Instruction.CLOSED_BRACKET => new Operation(token, findMatchingOpenBracket(tokens, index))
+        case _ => new Operation(token, 1)
+      }
+    }
+  }
   /** Find a closed bracket that matches with the current open bracket.
    *
    *  @param tokens the sequence of tokens
@@ -88,21 +109,13 @@ object Compiler {
       }
     }
   }
-  /** Map each token to an appropriate operation.
+  /** Update the jumps for each bracket.
    *
-   *  @param tokens a sequence of tokens to be converted
-   *  @return a sequence of operations
+   *  @param operations the sequence of operations
+   *  @return an updated sequence of operations
    */
   @throws(classOf[InvalidSyntaxException])
-  def mapToOperations(tokens: Seq[Char]): Seq[Operation] = {
-    tokens.zipWithIndex.map { case (token, index) =>
-      token match {
-        case Instruction.OPEN_BRACKET => new Operation(token, findMatchingClosedBracket(tokens, index))
-        case Instruction.CLOSED_BRACKET => new Operation(token, findMatchingOpenBracket(tokens, index))
-        case _ => new Operation(token, 1)
-      }
-    }
-  }
+  def updateJumps(operations: Seq[Operation]): Seq[Operation] = Seq[Operation]()
   /** Compile the input program into Brainfuck's operations.
    *
    *  @param program the string of the program to be compiled
