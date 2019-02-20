@@ -10,7 +10,7 @@ Below is an example of a 'Hello, World!' program in Brainfuck:
 
 ## Compiler
 
-A Brainfuck compiler must operate on only these eight commands below. Any other characters will be ignored by the compiler.
+A Brainfuck compiler must operate on only these eight commands below. Any other characters should be ignored by the compiler.
 
 ```
 > : Increment the pointer

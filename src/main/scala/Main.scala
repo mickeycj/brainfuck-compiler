@@ -11,6 +11,7 @@ object Main extends App {
   val machine = new Machine(System.in, System.out)
   try {
     machine.execute(Compiler.compile(program))
+    machine.clear
   } catch {
     case e: InvalidSyntaxException => println(e.getMessage)
     case _: Throwable => println("Unknown Exception!")
