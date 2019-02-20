@@ -42,7 +42,7 @@ You should see the result of your Brainfuck's program like this:
 .
 [info] Running Main
 
-Hello World!
+Hello, World!
 
 [success] Total time: 1 s, completed Jan 1, 2019 12:00:00 AM
 .
