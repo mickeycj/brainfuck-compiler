@@ -153,7 +153,7 @@ object Compiler {
       }
     }
   }
-  /** Update the jumps for each bracket.
+  /** Update the jumps in the specified sequence of operations.
    *
    *  @param operations the sequence of operations
    *  @return an updated sequence of operations
