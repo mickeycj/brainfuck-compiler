@@ -23,7 +23,7 @@ A Brainfuck compiler must operate on only these eight commands below. Any other 
 ] : Jump to the matching open bracket if the value at the pointer is not 0
 ```
 
-Moreover, in this implementation of the compiler, any open bracket '[' that does not have a matching closed bracket ']' will cause the code to not compile and end with a syntax error. In other implementations, they will try to find the matching bracket in reverse, but will affect the performance.
+Moreover, in this implementation of the compiler, any open bracket (`[`) that does not have a matching closed bracket (`]`) will cause the code to not compile and end with a syntax error. In other implementations, they will try to find the matching bracket in reverse, but will affect the performance.
 
 ## Installation / Usage
 
