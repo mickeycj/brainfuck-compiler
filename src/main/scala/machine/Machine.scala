@@ -110,7 +110,7 @@ class Machine(
           case Instruction.READ => readChar(operation.argument)
           case Instruction.OPEN_BRACKET => jumped = tapes(tapePointer) == 0
           case Instruction.CLOSED_BRACKET => jumped = tapes(tapePointer) != 0
-          case _ => throw new InvalidSyntaxException("Syntax Error: operation does not exists!")
+          case _ => throw new InvalidSyntaxException("Syntax Error: operation does not exist!")
         }
         if (jumped) {
           jump(operation.argument)
