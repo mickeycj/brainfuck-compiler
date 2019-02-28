@@ -67,16 +67,15 @@ object Compiler {
       case Length => accum.reverse
       case _ => {
         val token = tokens(position)
-        var operation = new Operation('\n', 0)
-        var jump = 1
         token match {
-          case Instruction.OPEN_BRACKET | Instruction.CLOSED_BRACKET => operation = new Operation(token, accum.length)
+          case Instruction.OPEN_BRACKET | Instruction.CLOSED_BRACKET => {
+            mapToOperationsAccumulator(tokens, position + 1, new Operation(token, accum.length) :: accum)
+          }
           case _ => {
-            operation = foldTokens(tokens, position)
-            jump = operation.argument
+            val operation = foldTokens(tokens, position)
+            mapToOperationsAccumulator(tokens, position + operation.argument, operation :: accum)
           }
         }
-        mapToOperationsAccumulator(tokens, position + jump, operation :: accum)
       }
     }
   }
