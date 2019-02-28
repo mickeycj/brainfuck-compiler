@@ -2,7 +2,7 @@
 
 **Brainfuck** is a Turing complete, esoteric programming language created in 1993 by Urban Müller. It consists of only eight commands and an instruction pointer. You can read more about it [here](https://en.wikipedia.org/wiki/Brainfuck).
 
-Below is an example of a 'Hello, World!' program in Brainfuck:
+Below is an example of a 'Hello, World!' program written in Brainfuck:
 
 ```brainfuck
 ++++++++++[>+++++++>++++++++++>++++>+<<<<-]>++.>+.+++++++..+++.>++++.------------.<<+++++++++++++++.>.+++.------.--------.>+.>.
