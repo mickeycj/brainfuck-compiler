@@ -37,16 +37,19 @@ sbt run
 
 You should see the result of your Brainfuck's program like this:
 
-```sh
-.
-.
+```
+...
 [info] Running Main
+Hello, World!
+[success] Total time: 1 s, completed Jan 1, 2019 12:00:00 AM
+```
 
+Or you can use [IntelliJ IDEA](https://www.jetbrains.com/idea/), which should show a result like this:
+
+```
 Hello, World!
 
-[success] Total time: 1 s, completed Jan 1, 2019 12:00:00 AM
-.
-.
+Process finished with exit code 0
 ```
 
 In case you would like to run another Brainfuck program, you can put it in the `./src/main/resources` folder and edit the Brainfuck's file name in `./src/main/scala/Main.scala`
