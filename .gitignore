@@ -2,6 +2,10 @@
 *.class
 *.log
 
+# IntelliJ specific
+.idea/
+*.iml
+
 # sbt specific
 .cache/
 .history/
