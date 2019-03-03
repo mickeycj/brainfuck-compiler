@@ -98,7 +98,7 @@ class Machine(
     val Length = operations.length
     instructionPointer match {
       case Length =>
-      case _ => {
+      case _ =>
         val operation = operations(instructionPointer)
         var jumped = false
         operation.instruction match {
@@ -118,7 +118,6 @@ class Machine(
           instructionPointer += 1
         }
         execute(operations)
-      }
     }
   }
   /** Clear the tapes.

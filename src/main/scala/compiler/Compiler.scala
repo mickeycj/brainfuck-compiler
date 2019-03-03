@@ -29,7 +29,7 @@ object Compiler {
    *  @param tokens a sequence of tokens to be converted
    *  @param position the current position of the token
    *  @param count the number of duplicates found 
-   *  @return an operation with theh appropriate argument
+   *  @return an operation with the appropriate argument
    */
   @tailrec
   def foldTokensAccumulator(tokens: Seq[Char], position: Int, count: Int = 1): Operation = {
@@ -37,12 +37,11 @@ object Compiler {
     val Length = tokens.length
     position match {
       case Length => new Operation(PrevToken, count)
-      case _ => {
+      case _ =>
         tokens(position) match {
           case PrevToken => foldTokensAccumulator(tokens, position + 1, count + 1)
           case _ => new Operation(PrevToken, count)
         }
-      }
     }
   }
   /** Map each token to an appropriate operation.
@@ -68,13 +67,11 @@ object Compiler {
       case _ => {
         val token = tokens(position)
         token match {
-          case Instruction.OPEN_BRACKET | Instruction.CLOSED_BRACKET => {
+          case Instruction.OPEN_BRACKET | Instruction.CLOSED_BRACKET =>
             mapToOperationsAccumulator(tokens, position + 1, new Operation(token, accum.length) :: accum)
-          }
-          case _ => {
+          case _ =>
             val operation = foldTokens(tokens, position)
             mapToOperationsAccumulator(tokens, position + operation.argument, operation :: accum)
-          }
         }
       }
     }
@@ -101,19 +98,17 @@ object Compiler {
   def findMatchingClosedBracketAccumulator(operations: Seq[Operation], closedIndex: Int, depth: Int = 1): Int = {
     depth match {
       case 0 => closedIndex - 1
-      case _ => {
+      case _ =>
         val Length = operations.length
         closedIndex match {
           case Length => throw new InvalidSyntaxException("Syntax Error: no matching closed bracket found!")
-          case _ => {
+          case _ =>
             operations(closedIndex).instruction match {
               case Instruction.OPEN_BRACKET => findMatchingClosedBracketAccumulator(operations, closedIndex + 1, depth + 1)
               case Instruction.CLOSED_BRACKET => findMatchingClosedBracketAccumulator(operations, closedIndex + 1, depth - 1)
               case _ => findMatchingClosedBracketAccumulator(operations, closedIndex + 1, depth)
             }
-          }
         }
-      }
     }
   }
   /** Find an open bracket that matches with the current closed bracket.
@@ -138,18 +133,16 @@ object Compiler {
   def findMatchingOpenBracketAccumulator(operations: Seq[Operation], openIndex: Int, depth: Int = 1): Int = {
     depth match {
       case 0 => openIndex + 1
-      case _ => {
+      case _ =>
         openIndex match {
           case -1 => throw new InvalidSyntaxException("Syntax Error: no matching open bracket found!")
-          case _ => {
+          case _ =>
             operations(openIndex).instruction match {
               case Instruction.OPEN_BRACKET => findMatchingOpenBracketAccumulator(operations, openIndex - 1, depth - 1)
               case Instruction.CLOSED_BRACKET => findMatchingOpenBracketAccumulator(operations, openIndex - 1, depth + 1)
               case _ => findMatchingOpenBracketAccumulator(operations, openIndex - 1, depth)
             }
-          }
         }
-      }
     }
   }
   /** Update the jumps in the specified sequence of operations.
@@ -159,7 +152,7 @@ object Compiler {
    */
   @throws(classOf[InvalidSyntaxException])
   def updateJumps(operations: Seq[Operation]): Seq[Operation] = {
-    operations.map { case operation =>
+    operations.map { operation =>
       val token = operation.instruction
       val position = operation.argument
       token match {
