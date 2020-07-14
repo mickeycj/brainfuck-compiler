@@ -1,9 +1,9 @@
-/** Imports */
+/* Imports */
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
 import compiler.Compiler
 import machine.Machine
-/** Run an example Brainfuck program => hello.bf */
+/* Run an example Brainfuck program => hello.bf */
 object Main extends App {
   val fileName = "hello.bf"
   Try(Source.fromResource(fileName)) match {

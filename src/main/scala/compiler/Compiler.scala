@@ -1,5 +1,5 @@
 package compiler
-/** Imports */
+/* Imports */
 import scala.annotation.tailrec
 import machine.Operation
 /** Object for compiling Brainfuck's codes.

@@ -1,5 +1,5 @@
 package compiler
-/** Imports */
+/* Imports */
 import org.scalatest.FunSuite
 import machine.Operation
 /** CompilerSpec

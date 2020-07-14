@@ -1,5 +1,5 @@
 package machine
-/** Imports */
+/* Imports */
 import java.io.{InputStream, PrintStream}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
@@ -11,7 +11,7 @@ import compiler.Instruction
  *  Test suite for Machine class.
  */
 class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
-  /** Setup codes */
+  /* Setup codes */
   val in: InputStream = mock[InputStream]
   val out: PrintStream = mock[PrintStream]
   var machine: Machine = _

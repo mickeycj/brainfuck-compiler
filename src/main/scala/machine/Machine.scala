@@ -1,5 +1,5 @@
 package machine
-/** Imports */
+/* Imports */
 import java.io.{IOException, InputStream, PrintStream}
 import scala.annotation.tailrec
 import compiler.{Instruction, InvalidSyntaxException}
