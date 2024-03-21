@@ -11,7 +11,7 @@ object Main extends App {
       val program = bufferedSource.getLines.mkString
       val machine = new Machine(System.in, System.out)
       Try(machine.execute(Compiler.compile(program))) match {
-        case Success(_) => machine.clear()
+        case Success(_) => machine.clear
         case Failure(f) => println(f.getMessage)
       }
       bufferedSource.close()
