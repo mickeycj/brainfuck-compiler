@@ -31,7 +31,7 @@ First, follow `sbt` installation steps [here](https://www.scala-sbt.org/1.0/docs
 
 Then, after cloning this repository, run the main app using this command:
 
-```sh
+```console
 sbt run
 ```
 
