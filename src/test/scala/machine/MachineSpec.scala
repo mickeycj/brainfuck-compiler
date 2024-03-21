@@ -3,14 +3,14 @@ package machine
 import java.io.{InputStream, PrintStream}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
-import org.scalatest.FunSuite
-import org.scalatest.mockito.MockitoSugar
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatestplus.mockito.MockitoSugar
 import compiler.Instruction
 /** MachineSpec
  *
  *  Test suite for Machine class.
  */
-class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
+class MachineSpec extends AnyFunSuite with BeforeAndAfter with MockitoSugar {
   /* Setup codes */
   val in: InputStream = mock[InputStream]
   val out: PrintStream = mock[PrintStream]
@@ -114,7 +114,7 @@ class MachineSpec extends FunSuite with BeforeAndAfter with MockitoSugar {
     machine.tapePointer = 5
     machine.instructionPointer = 1
     machine.clear
-    assert(machine.tapes.deep == Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0).deep)
+    assert(machine.tapes sameElements Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
     assert(machine.tapePointer == 0)
     assert(machine.instructionPointer == 0)
   }

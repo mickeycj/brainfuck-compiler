@@ -1,12 +1,12 @@
 package compiler
 /* Imports */
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import machine.Operation
 /** CompilerSpec
  *
  *  Test suite for compiler functions.
  */
-class CompilerSpec extends FunSuite {
+class CompilerSpec extends AnyFunSuite {
   /** Tests for program tokenization.
    *
    *  Each sequence of tokens should contain only 8 valid Brainfuck's tokens: ">", "<", "+", "-", ".", ",", "[" and "]".
