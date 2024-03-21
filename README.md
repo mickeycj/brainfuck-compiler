@@ -12,7 +12,7 @@ Below is an example of a 'Hello, World!' program written in Brainfuck:
 
 A Brainfuck compiler must operate on only these eight commands below. Any other characters should be ignored by the compiler.
 
-```
+```plaintext
 > : Increment the pointer
 < : Decrement the pointer
 + : Increment the value at the pointer
@@ -37,7 +37,7 @@ sbt run
 
 You should see the result of your Brainfuck's program like this:
 
-```
+```console
 ...
 [info] Running Main
 Hello, World!
@@ -46,7 +46,7 @@ Hello, World!
 
 Or you can use [IntelliJ IDEA](https://www.jetbrains.com/idea/), which should show a result like this:
 
-```
+```console
 Hello, World!
 
 Process finished with exit code 0
