@@ -100,7 +100,7 @@ class Machine(
       case Length =>
       case _ =>
         val operation = operations(instructionPointer)
-        var jumped = false
+        var didJump = false
         operation.instruction match {
           case Instruction.INC_PTR => incrementPointer(operation.argument)
           case Instruction.DEC_PTR => decrementPointer(operation.argument)
@@ -108,11 +108,11 @@ class Machine(
           case Instruction.DEC_VAL => decrementValue(operation.argument)
           case Instruction.PRINT => printChar(operation.argument)
           case Instruction.READ => readChar(operation.argument)
-          case Instruction.OPEN_BRACKET => jumped = tapes(tapePointer) == 0
-          case Instruction.CLOSED_BRACKET => jumped = tapes(tapePointer) != 0
+          case Instruction.OPEN_BRACKET => didJump = tapes(tapePointer) == 0
+          case Instruction.CLOSED_BRACKET => didJump = tapes(tapePointer) != 0
           case _ => throw new InvalidSyntaxException("Syntax Error: operation does not exist!")
         }
-        if (jumped) {
+        if (didJump) {
           jump(operation.argument)
         } else {
           instructionPointer += 1
